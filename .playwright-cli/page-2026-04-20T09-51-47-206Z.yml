@@ -1,0 +1,32 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: AI
+          - generic [ref=e7]: Interviewer
+        - generic [ref=e8]: Powered by OpenAI
+    - main [ref=e9]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e79]: Speaking
+          - generic [ref=e81]:
+            - generic [ref=e82]: Question
+            - generic [ref=e83]: Hi there! Thanks for joining me today. To start off, can you tell me about a challenging project you worked on in your last role and what your specific contributions were?
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: Your answer
+            - generic [ref=e87]: 0 chars
+          - textbox "Tap the mic to speak — or type here." [disabled] [ref=e88]
+          - generic [ref=e89]:
+            - button "Start mic" [disabled] [ref=e90]: Start mic
+            - button "Stop mic" [disabled] [ref=e92]
+            - button "End interview" [ref=e93]
+            - button "Submit →" [disabled] [ref=e94]
+        - group [ref=e95]:
+          - generic "Transcript · 1 turn" [ref=e96] [cursor=pointer]:
+            - generic [ref=e97]: Transcript
+            - generic [ref=e98]: · 1 turn
+  - button "Open Next.js Dev Tools" [ref=e67] [cursor=pointer]:
+    - img [ref=e68]
+  - alert [ref=e71]

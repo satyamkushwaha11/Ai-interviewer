@@ -1,0 +1,47 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - heading "AI Interviewer" [level=1] [ref=e3]
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - heading "Interview mode" [level=2] [ref=e6]
+        - generic [ref=e7]:
+          - button "Targeted Resume + job description" [ref=e8]:
+            - generic [ref=e9]: Targeted
+            - generic [ref=e10]: Resume + job description
+          - button "General Based on your background" [ref=e11]:
+            - generic [ref=e12]: General
+            - generic [ref=e13]: Based on your background
+      - generic [ref=e14]:
+        - generic [ref=e15]: Resume
+        - button "Choose File" [ref=e16]
+        - textbox "Upload a PDF or paste your resume text here" [ref=e17]
+      - generic [ref=e18]:
+        - generic [ref=e19]: Job description
+        - textbox "Paste the job description" [ref=e20]
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]: Role (optional)
+          - textbox "e.g. Senior Backend Engineer" [ref=e24]
+        - generic [ref=e25]:
+          - generic [ref=e26]: Duration
+          - combobox [ref=e27]:
+            - option "5 min · quick"
+            - option "15 min · standard" [selected]
+            - option "30 min · full loop"
+            - option "45 min · deep dive"
+      - generic [ref=e28]:
+        - generic [ref=e29]: Difficulty
+        - generic [ref=e30]:
+          - button "easy" [ref=e31]
+          - button "medium" [ref=e32]
+          - button "hard" [ref=e33]
+          - button "brutal" [ref=e34]
+      - generic [ref=e35]:
+        - generic [ref=e36]: Interviewer voice
+        - generic [ref=e37]:
+          - button "Female" [ref=e38]
+          - button "Male" [ref=e39]
+      - button "Start interview" [disabled] [ref=e40]
+  - button "Open Next.js Dev Tools" [ref=e46] [cursor=pointer]:
+    - img [ref=e47]
+  - alert [ref=e50]

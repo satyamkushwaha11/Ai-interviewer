@@ -1,0 +1,720 @@
+[     934ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[     999ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   14585ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   14778ms] [LOG] [Fast Refresh] done in 294ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[   19198ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  126806ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=iCxKtyJ9F3_XmH2vqaBUc' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  130592ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  135276ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  135497ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  140157ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  140192ms] [LOG] [Fast Refresh] done in 108ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  140297ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  140407ms] [LOG] [Fast Refresh] done in 214ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  177293ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  177562ms] [LOG] [Fast Refresh] done in 368ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  435517ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=zy5wF3U-5rl_ETBAhMmsa' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  436518ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=zy5wF3U-5rl_ETBAhMmsa' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  437520ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=zy5wF3U-5rl_ETBAhMmsa' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  438522ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=zy5wF3U-5rl_ETBAhMmsa' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  439525ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=zy5wF3U-5rl_ETBAhMmsa' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  444531ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=zy5wF3U-5rl_ETBAhMmsa' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  449538ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=zy5wF3U-5rl_ETBAhMmsa' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  454559ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=zy5wF3U-5rl_ETBAhMmsa' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  459598ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  461547ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  461624ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  473759ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  473963ms] [LOG] [Fast Refresh] done in 303ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  575417ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  575425ms] [LOG] [Fast Refresh] done in 108ms @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  583217ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=ES9PnrANqkhDWZp_M6Q7b' failed:  @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  584231ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  593485ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=ES9PnrANqkhDWZp_M6Q7b' failed:  @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  594492ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  602489ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=ES9PnrANqkhDWZp_M6Q7b' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  603492ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=ES9PnrANqkhDWZp_M6Q7b' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  604493ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=ES9PnrANqkhDWZp_M6Q7b' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  605495ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=ES9PnrANqkhDWZp_M6Q7b' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  606496ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=ES9PnrANqkhDWZp_M6Q7b' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js:13299
+[  612472ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js:2431
+[  640340ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  640871ms] [LOG] [HMR] connected @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  643591ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:57
+[  644617ms] [LOG] [Fast Refresh] done in 1776679630895ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  646597ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  649763ms] [LOG] [Fast Refresh] done in 3165ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  652464ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:57
+[  655671ms] [LOG] [Fast Refresh] done in 9073ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  656306ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  658061ms] [LOG] [Fast Refresh] done in 1755ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  661063ms] [WARNING] The resource http://localhost:3000/_next/static/media/4cf2300e9c8272f7-s.p.woff2?v=1776679620987 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  661063ms] [WARNING] The resource http://localhost:3000/_next/static/media/93f479601ee12b01-s.p.woff2?v=1776679620987 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  663554ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:57
+[  666820ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/?_rsc=wnywt:0
+[  666958ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  667307ms] [LOG] [Fast Refresh] done in 349ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  667508ms] [LOG] [Fast Refresh] done in 549ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  667553ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  667933ms] [LOG] [Fast Refresh] done in 380ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  668263ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:57
+[  668368ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/?_rsc=wnywt:0
+[  668437ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/:0
+[  670920ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:28004
+[  671316ms] Error: Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found
+
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at getNotFoundError (file:///home/satyamkushwaha/Desktop/projects/ai-agent/ai-resume-tailor/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseNotFoundError.js:154:16)
+    at async getModuleBuildError (file:///home/satyamkushwaha/Desktop/projects/ai-agent/ai-resume-tailor/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/webpackModuleError.js:103:27)
+    at async (file:///home/satyamkushwaha/Desktop/projects/ai-agent/ai-resume-tailor/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:29:49)
+    at async (file:///home/satyamkushwaha/Desktop/projects/ai-agent/ai-resume-tailor/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:27:21)
+[  671284ms] [LOG] [HMR] connected @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  671289ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  671510ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  671702ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  671702ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  672226ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  672263ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  672264ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  672747ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  672849ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  672850ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  673101ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  673117ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  673210ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  673210ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  673537ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  673538ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  673908ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  674044ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  674044ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  674527ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  674537ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  674631ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  674631ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  674965ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  674966ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  675022ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  675326ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  675329ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  675356ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  675580ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  675580ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  675939ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  676873ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  677304ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  677305ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  677602ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  677686ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  677686ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  678058ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  678159ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  678159ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  678400ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  678419ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  678537ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  678537ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  678852ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  678852ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  679205ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  679411ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  679412ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  679710ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  679724ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  679894ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  679895ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  680243ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  680245ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  680274ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  680760ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  680760ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  680799ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  681056ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  681056ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  681401ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  682202ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  683123ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  683123ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  683504ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  683571ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  683571ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  683975ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  684107ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  684107ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  684398ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  684407ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  684509ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  684509ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  684888ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  684889ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  685199ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  685382ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  685382ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  685652ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  685666ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  685759ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  685759ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  686081ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  686081ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  686120ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  686419ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  686419ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  686469ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  686719ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  686719ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  687099ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  687849ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  688307ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  688307ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  688569ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  688631ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  688632ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  688974ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  689168ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  689168ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  689421ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  689432ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  689546ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  689546ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  689837ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  689837ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  690154ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  690762ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  691378ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  691378ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  691716ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  691788ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  691789ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  692185ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  692280ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  692280ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  692566ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  692574ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  692679ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  692679ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  692980ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  692980ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  693336ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  693533ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  693533ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  693890ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  693910ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  694014ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  694014ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  694403ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  694403ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  694466ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  694804ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  694805ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  694866ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  695217ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  695217ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  695572ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  696275ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  696720ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  696721ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  697048ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  697109ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  697111ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  697479ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  697564ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  697564ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  697779ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  697787ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  697883ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  697883ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  698215ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  698216ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  698513ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  698749ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  698749ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  699081ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  699089ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  699178ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  699178ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  699787ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  699787ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  699843ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  700125ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  700125ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  700148ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  700414ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  700415ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  700747ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  701747ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  702201ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  702202ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  702482ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  702552ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  702553ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  702888ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  702992ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  702993ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  703207ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  703224ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  703308ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  703308ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  703751ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  703752ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  704333ms] [ERROR] ./app/api/parse-resume/route.ts:12:22
+Module not found: ESM packages (pdfjs-dist/legacy/build/pdf.worker.mjs) need to be imported. Use 'import' to reference the package instead. https://nextjs.org/docs/messages/import-esm-externals
+  10 |   if (workerRegistered) return;
+  11 |   const req = createRequire(import.meta.url);
+> 12 |   const workerPath = req.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+     |                      ^
+  13 |   PDFParse.setWorker(workerPath);
+  14 |   workerRegistered = true;
+  15 | }
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.js:70
+[  704567ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  704568ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  704882ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  704895ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  704980ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  704980ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  705485ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  705485ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  705609ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  705992ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  705992ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  706019ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  706387ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  706387ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  708132ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/_next/static/webpack/9a77a363150ec263.webpack.hot-update.json:0
+[  708132ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  708171ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  710268ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  713716ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  713906ms] [LOG] [HMR] connected @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  714001ms] Error: Internal Next.js error: Router action dispatched before initialization.
+    at dispatchAppRouterAction (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/use-action-queue.js:50:37)
+    at eval (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router-instance.js:329:61)
+    at startTransition (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react/cjs/react.development.js:556:27)
+    at Object.hmrRefresh (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router-instance.js:328:40)
+    at eval (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:300:64)
+    at startTransition (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react/cjs/react.development.js:556:27)
+    at processMessage (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:299:44)
+    at WebSocket.handleMessage (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/web-socket.js:95:52)
+[  714022ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  714330ms] [LOG] [Fast Refresh] done in 309ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  714339ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  714486ms] [LOG] [Fast Refresh] done in 146ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  714692ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  714840ms] [LOG] [Fast Refresh] done in 148ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  717850ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  718035ms] [LOG] [HMR] connected @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  718479ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  718733ms] [LOG] [Fast Refresh] done in 255ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  718921ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  719084ms] [LOG] [Fast Refresh] done in 163ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  719296ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  719509ms] [LOG] [Fast Refresh] done in 214ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  720033ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  720174ms] [LOG] [Fast Refresh] done in 141ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  720470ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  720602ms] [LOG] [Fast Refresh] done in 132ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  720948ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  721796ms] [LOG] [Fast Refresh] done in 849ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  722229ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  722349ms] [LOG] [Fast Refresh] done in 121ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  722654ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  722770ms] [LOG] [Fast Refresh] done in 115ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  723052ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  723156ms] [LOG] [Fast Refresh] done in 104ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  723391ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  723487ms] [LOG] [Fast Refresh] done in 96ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  723744ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  723854ms] [LOG] [Fast Refresh] done in 109ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  724130ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  724289ms] [LOG] [Fast Refresh] done in 160ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  724557ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  724655ms] [LOG] [Fast Refresh] done in 99ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  724970ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  725116ms] [LOG] [Fast Refresh] done in 146ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  725396ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  725539ms] [LOG] [Fast Refresh] done in 143ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  725855ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  726021ms] [LOG] [Fast Refresh] done in 166ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  728669ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  728873ms] [LOG] [HMR] connected @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  729410ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  729754ms] [LOG] [Fast Refresh] done in 344ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  729762ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  729945ms] [LOG] [Fast Refresh] done in 182ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  730205ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  730353ms] [LOG] [Fast Refresh] done in 148ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  730998ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  731165ms] [LOG] [Fast Refresh] done in 166ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  731372ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  731468ms] [LOG] [Fast Refresh] done in 95ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  731692ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  731786ms] [LOG] [Fast Refresh] done in 95ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  732030ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  732120ms] [LOG] [Fast Refresh] done in 89ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  732395ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  732521ms] [LOG] [Fast Refresh] done in 127ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  732736ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  732823ms] [LOG] [Fast Refresh] done in 86ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  733069ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  733165ms] [LOG] [Fast Refresh] done in 97ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  733395ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  733492ms] [LOG] [Fast Refresh] done in 96ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  733691ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  733789ms] [LOG] [Fast Refresh] done in 99ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  734015ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  734127ms] [LOG] [Fast Refresh] done in 112ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  734382ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  734495ms] [LOG] [Fast Refresh] done in 113ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  734782ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  734929ms] [LOG] [Fast Refresh] done in 147ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  735231ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  735571ms] [LOG] [Fast Refresh] done in 341ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  739159ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  739315ms] [LOG] [HMR] connected @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  739781ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  740365ms] [LOG] [Fast Refresh] done in 583ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  740424ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  740694ms] [LOG] [Fast Refresh] done in 270ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  742401ms] [LOG] [Fast Refresh] done in 1976ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  742469ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  742773ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  742865ms] [LOG] [Fast Refresh] done in 92ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  743096ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  743207ms] [LOG] [Fast Refresh] done in 112ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  743444ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  743561ms] [LOG] [Fast Refresh] done in 117ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  743810ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  743930ms] [LOG] [Fast Refresh] done in 120ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  744166ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  744270ms] [LOG] [Fast Refresh] done in 104ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  744467ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  744577ms] [LOG] [Fast Refresh] done in 110ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  744795ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  744895ms] [LOG] [Fast Refresh] done in 100ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  745160ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  745269ms] [LOG] [Fast Refresh] done in 110ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  745524ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  745640ms] [LOG] [Fast Refresh] done in 116ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  746371ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  746625ms] [LOG] [Fast Refresh] done in 253ms @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/next-devtools/shared/forward-logs-shared.js:27
+[  748652ms] [ERROR] Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING @ http://localhost:3000/_next/static/chunks/main-app.js?v=1776679733167:0
+[  748659ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/favicon.ico?603d046c9a6fdfbb:0
+[  751659ms] [WARNING] The resource http://localhost:3000/_next/static/media/93f479601ee12b01-s.p.woff2?v=1776679733167 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0
+[  751659ms] [WARNING] The resource http://localhost:3000/_next/static/media/4cf2300e9c8272f7-s.p.woff2?v=1776679733167 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/:0

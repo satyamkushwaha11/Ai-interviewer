@@ -1,0 +1,20 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - heading "AI Interviewer" [level=1] [ref=e3]
+    - generic [ref=e51]:
+      - generic [ref=e57]:
+        - generic [ref=e58]: Interviewer speaking
+        - generic [ref=e59]: Hi there! Thanks for joining me today. To kick things off, can you tell me about your experience leading the migration from a monolith to microservices at Acme Corp? What were some of the biggest challenges you faced?
+      - generic [ref=e60]:
+        - generic [ref=e61]: Your answer
+        - textbox "Tap the mic to speak, or type here" [disabled] [ref=e62]
+        - generic [ref=e63]:
+          - button "Start mic" [disabled] [ref=e64]
+          - button "Stop mic" [disabled] [ref=e65]
+          - button "Submit answer" [disabled] [ref=e66]
+          - button "End interview" [ref=e67]
+      - group [ref=e68]:
+        - generic "Transcript (1)" [ref=e69] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e46] [cursor=pointer]:
+    - img [ref=e47]
+  - alert [ref=e50]

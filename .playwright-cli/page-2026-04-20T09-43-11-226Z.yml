@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: AI
+          - generic [ref=e7]: Interviewer
+        - generic [ref=e8]: Powered by OpenAI
+    - main [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: Mock interview · real prep
+        - heading "Interview like it's real." [level=1] [ref=e12]
+        - paragraph [ref=e13]: Upload your resume, paste the job, and get a live interviewer that probes, follows up, and grades you like a hiring manager would.
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - heading "Interview mode" [level=2] [ref=e17]
+            - generic [ref=e18]: Step 1 of 3
+          - generic [ref=e19]:
+            - button "Targeted Resume + job description" [ref=e20]:
+              - generic [ref=e21]: Targeted
+              - generic [ref=e22]: Resume + job description
+            - button "General Based on your background" [ref=e23]:
+              - generic [ref=e24]: General
+              - generic [ref=e25]: Based on your background
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - heading "Your resume" [level=2] [ref=e28]
+            - generic [ref=e29] [cursor=pointer]: Upload PDF
+          - textbox "Paste resume text, or upload a PDF above." [ref=e30]
+        - generic [ref=e31]:
+          - heading "Job description" [level=2] [ref=e32]
+          - textbox "Paste the job description you're preparing for." [ref=e33]
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]: Role (optional)
+            - textbox "Senior Backend Engineer" [ref=e37]
+          - generic [ref=e38]:
+            - generic [ref=e39]: Duration
+            - combobox [ref=e40]:
+              - option "5 min · quick"
+              - option "15 min · standard" [selected]
+              - option "30 min · full loop"
+              - option "45 min · deep dive"
+        - generic [ref=e41]:
+          - heading "Difficulty" [level=2] [ref=e42]
+          - generic [ref=e43]:
+            - button "Easy Warm + encouraging" [ref=e44]:
+              - generic [ref=e45]: Easy
+              - generic [ref=e46]: Warm + encouraging
+            - button "Medium Balanced probing" [ref=e47]:
+              - generic [ref=e48]: Medium
+              - generic [ref=e49]: Balanced probing
+            - button "Hard Senior-level depth" [ref=e50]:
+              - generic [ref=e51]: Hard
+              - generic [ref=e52]: Senior-level depth
+            - button "Brutal Top-tier, unforgiving" [ref=e53]:
+              - generic [ref=e54]: Brutal
+              - generic [ref=e55]: Top-tier, unforgiving
+        - generic [ref=e56]:
+          - heading "Interviewer voice" [level=2] [ref=e57]
+          - generic [ref=e58]:
+            - button "Female" [ref=e59]
+            - button "Male" [ref=e60]
+        - button "Start interview →" [disabled] [ref=e61]
+  - button "Open Next.js Dev Tools" [ref=e67] [cursor=pointer]:
+    - img [ref=e68]
+  - alert [ref=e71]

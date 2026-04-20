@@ -1,64 +1,116 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import Interview from './components/Interview';
+import Report from './components/Report';
+import SetupForm from './components/SetupForm';
+import type { InterviewConfig, InterviewReport, TurnMessage } from './lib/types';
+
+type Step = 'setup' | 'preparing' | 'interview' | 'generating' | 'report';
+
+const TURNS_PER_MIN = 0.8;
 
 export default function Home() {
+  const [step, setStep] = useState<Step>('setup');
+  const [config, setConfig] = useState<InterviewConfig | null>(null);
+  const [report, setReport] = useState<InterviewReport | null>(null);
+  const [error, setError] = useState('');
+
+  const handleStart = async (cfg: InterviewConfig) => {
+    setError('');
+    setStep('preparing');
+    try {
+      const res = await fetch('/api/summarize-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resume: cfg.resume, jd: cfg.jd, role: cfg.role, mode: cfg.mode }),
+      });
+      const data = await res.json();
+      const targetTurns = Math.max(3, Math.round(cfg.durationMin * TURNS_PER_MIN));
+      setConfig({ ...cfg, summary: data.summary, targetTurns });
+      setStep('interview');
+    } catch (e) {
+      setError((e as Error).message);
+      setStep('setup');
+    }
+  };
+
+  const handleFinish = async (history: TurnMessage[]) => {
+    if (!config) return;
+    setStep('generating');
+    try {
+      const res = await fetch('/api/generate-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config, history }),
+      });
+      const data = await res.json();
+      setReport(data.report);
+      setStep('report');
+    } catch (e) {
+      setError((e as Error).message);
+      setStep('setup');
+    }
+  };
+
+  const handleRestart = () => {
+    setStep('setup');
+    setConfig(null);
+    setReport(null);
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen">
+      <header className="border-b border-zinc-800/60">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-sky-500 flex items-center justify-center text-xs font-semibold">AI</div>
+            <span className="font-semibold tracking-tight">Interviewer</span>
+          </div>
+          <span className="text-xs text-zinc-500 hidden sm:inline">Powered by OpenAI</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-6 py-10">
+        {step === 'setup' && (
+          <>
+            <div className="text-center mb-12">
+              <div className="inline-block text-xs uppercase tracking-[0.2em] text-zinc-500 mb-4">
+                Mock interview · real prep
+              </div>
+              <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
+                Interview like it&apos;s real.
+              </h1>
+              <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
+                Upload your resume, paste the job, and get a live interviewer that probes, follows up, and grades you like a hiring manager would.
+              </p>
+            </div>
+            <SetupForm onStart={handleStart} />
+          </>
+        )}
+        {step === 'preparing' && (
+          <div className="text-center py-24">
+            <div className="inline-flex items-center gap-3 text-zinc-400">
+              <span className="w-2 h-2 rounded-full bg-violet-400 dot-pulse" />
+              Preparing your interviewer…
+            </div>
+          </div>
+        )}
+        {step === 'interview' && config && (
+          <Interview config={config} onFinish={handleFinish} />
+        )}
+        {step === 'generating' && (
+          <div className="text-center py-24">
+            <div className="inline-flex items-center gap-3 text-zinc-400">
+              <span className="w-2 h-2 rounded-full bg-violet-400 dot-pulse" />
+              Generating your report…
+            </div>
+          </div>
+        )}
+        {step === 'report' && report && <Report report={report} onRestart={handleRestart} />}
+        {error && (
+          <div className="mt-6 text-sm text-rose-400 text-center">{error}</div>
+        )}
       </main>
     </div>
   );
