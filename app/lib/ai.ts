@@ -34,7 +34,7 @@ export interface AIProvider {
   chat(messages: ChatMessage[], opts?: ChatOptions): Promise<string>;
 }
 
-export const GEMINI_CHAT_MODEL = process.env.GEMINI_CHAT_MODEL || 'gemini-2.5-flash';
+export const GEMINI_CHAT_MODEL = process.env.GEMINI_CHAT_MODEL || 'gemini-1.5-flash';
 
 function hasOpenAI(): boolean {
   return !!process.env.OPENAI_API_KEY;
@@ -87,13 +87,16 @@ interface GeminiResponse {
   candidates?: { content?: { parts?: GeminiPart[] } }[];
 }
 
+const RATE_LIMIT_RESET_MS = 60000;
+const rateLimitedKeys = new Map<string, number>();
+
 const geminiProvider: AIProvider = {
   name: 'gemini',
   async chat(messages, opts) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) throw new Error('Gemini selected but GEMINI_API_KEY is missing');
+    const rawKey = process.env.GEMINI_API_KEY;
+    if (!rawKey) throw new Error('Gemini selected but GEMINI_API_KEY is missing');
+    const apiKeys = rawKey.split(',').map((k) => k.trim()).filter((k) => k.length > 0);
 
-    // Gemini takes the system prompt separately and uses "model"/"user" roles.
     const systemText = messages
       .filter((m) => m.role === 'system')
       .map((m) => m.content)
@@ -106,50 +109,74 @@ const geminiProvider: AIProvider = {
         parts: [{ text: m.content }],
       }));
 
-    // Gemini rejects a request with empty `contents` (HTTP 400). This happens
-    // when the only input is a system prompt — e.g. the first interview turn,
-    // where the model is expected to open the conversation. OpenAI accepts a
-    // system-only request, so inject a minimal user turn to keep parity.
     if (contents.length === 0) {
       contents.push({ role: 'user', parts: [{ text: 'Begin.' }] });
     }
 
-    // Gemini 2.5+/3.x "flash" models spend hidden "thinking" tokens that count
-    // against maxOutputTokens, which can starve short replies. Disable it so the
-    // whole budget goes to the answer. Only flash models allow a 0 budget; pro
-    // models reject it, so we leave those alone.
-    const allowsNoThinking = /flash/i.test(GEMINI_CHAT_MODEL);
-
     const body = {
-      ...(systemText ? { system_instruction: { parts: [{ text: systemText }] } } : {}),
+      ...(systemText ? { systemInstruction: { parts: [{ text: systemText }] } } : {}),
       contents,
       generationConfig: {
         ...(opts?.temperature != null ? { temperature: opts.temperature } : {}),
         ...(opts?.maxTokens != null ? { maxOutputTokens: opts.maxTokens } : {}),
         ...(opts?.json ? { responseMimeType: 'application/json' } : {}),
-        ...(allowsNoThinking ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
       },
     };
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_CHAT_MODEL}:generateContent`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-      body: JSON.stringify(body),
-    });
 
-    if (!res.ok) {
-      const detail = await res.text();
-      throw new Error(`Gemini API error ${res.status}: ${detail}`);
+    let lastError: Error | null = null;
+    const now = Date.now();
+
+    for (const apiKey of apiKeys) {
+      const limitedUntil = rateLimitedKeys.get(apiKey);
+      if (limitedUntil && now < limitedUntil) {
+        continue; // Skip this key as it is currently in its cooldown period
+      }
+
+      try {
+        const res = await fetch(`${url}?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+          const detail = await res.text();
+          const detailLower = detail.toLowerCase();
+          
+          if (res.status === 429 || res.status === 503 || detailLower.includes('quota') || detailLower.includes('rate limit')) {
+            rateLimitedKeys.set(apiKey, Date.now() + RATE_LIMIT_RESET_MS);
+            throw new Error(`Rate limit hit: ${res.status}`);
+          }
+          throw new Error(`Gemini API error ${res.status}: ${detail}`);
+        }
+
+        // Success! Clear any existing rate limit for this key
+        rateLimitedKeys.delete(apiKey);
+
+        const data = (await res.json()) as GeminiResponse;
+        return (
+          data.candidates?.[0]?.content?.parts
+            ?.map((p) => p.text ?? '')
+            .join('')
+            .trim() ?? ''
+        );
+      } catch (err) {
+        lastError = err instanceof Error ? err : new Error(String(err));
+        if (lastError.message.includes('Rate limit hit')) {
+          continue;
+        } else {
+          throw lastError;
+        }
+      }
     }
 
-    const data = (await res.json()) as GeminiResponse;
-    return (
-      data.candidates?.[0]?.content?.parts
-        ?.map((p) => p.text ?? '')
-        .join('')
-        .trim() ?? ''
-    );
+    if (lastError) {
+      throw lastError;
+    }
+    
+    throw new Error('All configured Gemini API keys are currently rate limited. Please try again in a minute.');
   },
 };
 

@@ -57,36 +57,36 @@ export default function SetupForm({ onStart }: Props) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto card p-6 sm:p-8 space-y-8">
+    <div className="max-w-2xl mx-auto card p-6 sm:p-10 space-y-10">
       <section>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-medium text-zinc-300">Interview mode</h2>
-          <span className="text-xs text-zinc-500">Step 1 of 3</span>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-semibold text-zinc-100 tracking-wide">Interview configuration</h2>
+          <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 bg-zinc-900 px-3 py-1 rounded-md border border-zinc-800">Step 1 of 3</span>
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => setMode('targeted')}
-            className={`pill p-4 text-left ${mode === 'targeted' ? 'pill-active' : ''}`}
+            className={`pill p-5 text-left ${mode === 'targeted' ? 'pill-active' : ''}`}
           >
-            <div className="font-medium text-sm">Targeted</div>
-            <div className="text-xs text-zinc-500 mt-1">Resume + job description</div>
+            <div className="font-semibold text-sm tracking-wide">Targeted</div>
+            <div className="text-xs text-zinc-400 mt-1.5 leading-relaxed">Resume + Job description</div>
           </button>
           <button
             type="button"
             onClick={() => setMode('general')}
-            className={`pill p-4 text-left ${mode === 'general' ? 'pill-active' : ''}`}
+            className={`pill p-5 text-left ${mode === 'general' ? 'pill-active' : ''}`}
           >
-            <div className="font-medium text-sm">General</div>
-            <div className="text-xs text-zinc-500 mt-1">Based on your background</div>
+            <div className="font-semibold text-sm tracking-wide">General</div>
+            <div className="text-xs text-zinc-400 mt-1.5 leading-relaxed">Based on background only</div>
           </button>
         </div>
       </section>
 
       <section>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-medium text-zinc-300">Your resume</h2>
-          <label className="text-xs text-violet-400 hover:text-violet-300 cursor-pointer">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-semibold text-zinc-100 tracking-wide">Candidate Resume</h2>
+          <label className="text-xs font-semibold uppercase tracking-wider text-indigo-400 hover:text-indigo-300 cursor-pointer bg-indigo-950/50 border border-indigo-900/50 hover:bg-indigo-900/50 px-3 py-1.5 rounded-md transition-colors">
             {parsing ? 'Parsing…' : 'Upload PDF'}
             <input
               type="file"
@@ -98,99 +98,101 @@ export default function SetupForm({ onStart }: Props) {
           </label>
         </div>
         <textarea
-          className="input w-full p-3 text-sm leading-relaxed"
+          className="input w-full p-4 text-sm leading-relaxed"
           rows={7}
-          placeholder={parsing ? 'Parsing your PDF…' : 'Paste resume text, or upload a PDF above.'}
+          placeholder={parsing ? 'Parsing PDF document...' : 'Paste resume text, or upload a PDF above.'}
           value={resume}
           onChange={(e) => setResume(e.target.value)}
         />
       </section>
 
       {mode === 'targeted' && (
-        <section>
-          <h2 className="text-sm font-medium text-zinc-300 mb-3">Job description</h2>
+        <section className="animate-fade-in-up">
+          <h2 className="text-base font-semibold text-zinc-100 tracking-wide mb-4">Job Description</h2>
           <textarea
-            className="input w-full p-3 text-sm leading-relaxed"
+            className="input w-full p-4 text-sm leading-relaxed"
             rows={5}
-            placeholder="Paste the job description you're preparing for."
+            placeholder="Paste the target job description."
             value={jd}
             onChange={(e) => setJd(e.target.value)}
           />
         </section>
       )}
 
-      <section className="grid grid-cols-2 gap-4">
+      <section className="grid grid-cols-2 gap-6 p-6 rounded-md bg-zinc-900 border border-zinc-800">
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">Role <span className="text-zinc-500 font-normal">(optional)</span></label>
+          <label className="block text-sm font-semibold text-zinc-100 tracking-wide mb-3">Target Role <span className="text-zinc-500 font-normal text-xs uppercase tracking-wider ml-2">Optional</span></label>
           <input
-            className="input w-full px-3 py-2 text-sm"
-            placeholder="Senior Backend Engineer"
+            className="input w-full px-4 py-3 text-sm"
+            placeholder="e.g. Senior Software Engineer"
             value={role}
             onChange={(e) => setRole(e.target.value)}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">Duration</label>
+          <label className="block text-sm font-semibold text-zinc-100 tracking-wide mb-3">Duration</label>
           <select
-            className="input w-full px-3 py-2 text-sm"
+            className="input w-full px-4 py-3 text-sm appearance-none bg-no-repeat bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M7%2010L12%2015L17%2010%22%20stroke%3D%22%2371717A%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_12px_center]"
             value={durationMin}
             onChange={(e) => setDurationMin(Number(e.target.value))}
           >
-            <option value={5}>5 min · quick</option>
-            <option value={15}>15 min · standard</option>
-            <option value={30}>30 min · full loop</option>
-            <option value={45}>45 min · deep dive</option>
+            <option value={5}>5 min · Screener</option>
+            <option value={15}>15 min · Standard</option>
+            <option value={30}>30 min · Full loop</option>
+            <option value={45}>45 min · Deep dive</option>
           </select>
         </div>
       </section>
 
       <section>
-        <h2 className="text-sm font-medium text-zinc-300 mb-3">Difficulty</h2>
-        <div className="grid grid-cols-4 gap-2">
+        <h2 className="text-base font-semibold text-zinc-100 tracking-wide mb-4">Rigor</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {DIFFICULTIES.map((d) => (
             <button
               key={d.value}
               type="button"
               onClick={() => setDifficulty(d.value)}
-              className={`pill p-3 text-left ${difficulty === d.value ? 'pill-active' : ''}`}
+              className={`pill p-4 text-center sm:text-left ${difficulty === d.value ? 'pill-active' : ''}`}
             >
-              <div className="text-sm font-medium">{d.label}</div>
-              <div className="text-[11px] text-zinc-500 mt-0.5">{d.hint}</div>
+              <div className="text-sm font-semibold tracking-wide">{d.label}</div>
+              <div className="text-[11px] text-zinc-400 mt-1 leading-relaxed hidden sm:block">{d.hint}</div>
             </button>
           ))}
         </div>
       </section>
 
       <section>
-        <h2 className="text-sm font-medium text-zinc-300 mb-3">Interviewer voice</h2>
-        <div className="grid grid-cols-2 gap-2">
+        <h2 className="text-base font-semibold text-zinc-100 tracking-wide mb-4">Interviewer Voice</h2>
+        <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => setGender('female')}
-            className={`pill p-3 ${gender === 'female' ? 'pill-active' : ''}`}
+            className={`pill p-4 font-medium tracking-wide ${gender === 'female' ? 'pill-active' : ''}`}
           >
-            Female
+            Female Associate
           </button>
           <button
             type="button"
             onClick={() => setGender('male')}
-            className={`pill p-3 ${gender === 'male' ? 'pill-active' : ''}`}
+            className={`pill p-4 font-medium tracking-wide ${gender === 'male' ? 'pill-active' : ''}`}
           >
-            Male
+            Male Associate
           </button>
         </div>
       </section>
 
-      {error && <div className="text-sm text-rose-400">{error}</div>}
+      {error && <div className="text-sm font-medium text-red-400 bg-red-950/50 border border-red-900/50 rounded-md p-4">{error}</div>}
 
-      <button
-        type="button"
-        disabled={!canStart || parsing}
-        onClick={start}
-        className="btn-primary w-full py-3 text-sm"
-      >
-        Start interview →
-      </button>
+      <div className="pt-4 border-t border-zinc-800">
+        <button
+          type="button"
+          disabled={!canStart || parsing}
+          onClick={start}
+          className="btn-primary w-full py-4 text-base font-semibold tracking-wide flex items-center justify-center gap-2"
+        >
+          {parsing ? 'Parsing PDF...' : 'Initialize Session'}
+        </button>
+      </div>
     </div>
   );
 }

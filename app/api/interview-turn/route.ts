@@ -51,6 +51,18 @@ export async function POST(request: Request) {
     return Response.json({ question, done });
   } catch (err) {
     console.error('interview-turn failed:', err);
-    return stubTurn();
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    
+    let friendlyMessage = "I'm sorry, but my AI system encountered an error. Please check your API configuration.";
+    if (errorMessage.includes('429') || errorMessage.toLowerCase().includes('quota')) {
+      friendlyMessage = "You have exceeded your Gemini API free tier rate limit. Please wait a short moment for the limit to reset before we continue.";
+    } else if (errorMessage.includes('API key not valid') || errorMessage.includes('401') || errorMessage.includes('403')) {
+      friendlyMessage = "Your API key appears to be invalid or missing. Please check your configuration.";
+    }
+
+    return Response.json({ 
+      question: friendlyMessage, 
+      done: false 
+    });
   }
 }
