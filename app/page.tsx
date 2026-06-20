@@ -75,17 +75,19 @@ export default function Home() {
         {step === 'setup' && (
           <>
             <div className="text-center mb-12">
-              <div className="inline-block text-xs uppercase tracking-[0.2em] text-zinc-500 mb-4">
-                Mock interview · real prep
+              <div className="inline-block text-xs uppercase tracking-[0.2em] text-zinc-500 mb-4 font-semibold">
+                AI Interview System
               </div>
-              <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight gradient-text">
-                Interview like it&apos;s real.
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6">
+                Enterprise Interview Prep.
               </h1>
-              <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
-                Upload your resume, paste the job, and get a live interviewer that probes, follows up, and grades you like a hiring manager would.
+              <p className="mt-4 text-zinc-400 max-w-xl mx-auto text-lg leading-relaxed">
+                Upload a candidate profile, provide a target role, and initiate a rigorous, hyper-realistic technical or behavioral interview.
               </p>
             </div>
-            <SetupForm onStart={handleStart} />
+            <div className="animate-fade-in-up">
+              <SetupForm onStart={handleStart} />
+            </div>
           </>
         )}
         {step === 'preparing' && (
