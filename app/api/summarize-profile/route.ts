@@ -1,4 +1,4 @@
-import { CHAT_MODEL, getOpenAI } from '@/app/lib/openai';
+import { getAIProvider } from '@/app/lib/ai';
 import { buildProfileSummaryPrompt } from '@/app/lib/prompts';
 import type { InterviewMode } from '@/app/lib/types';
 
@@ -12,8 +12,8 @@ export async function POST(request: Request) {
     mode: InterviewMode;
   };
 
-  const openai = getOpenAI();
-  if (!openai) {
+  const ai = getAIProvider();
+  if (!ai) {
     const fallback = `Candidate:\n- Background: (see resume)\n- Stack: (see resume)\n\n${mode === 'targeted' && jd ? `Role target:\n- Role: ${role || 'n/a'}\n- JD: ${jd.slice(0, 200)}\n` : ''}`;
     return Response.json({ summary: fallback });
   }
@@ -27,16 +27,12 @@ export async function POST(request: Request) {
     .filter(Boolean)
     .join('\n\n');
 
-  const completion = await openai.chat.completions.create({
-    model: CHAT_MODEL,
-    messages: [
+  const summary = await ai.chat(
+    [
       { role: 'system', content: buildProfileSummaryPrompt() },
       { role: 'user', content: userBlock },
     ],
-    temperature: 0.2,
-    max_tokens: 500,
-  });
-
-  const summary = completion.choices[0]?.message?.content?.trim() ?? '';
+    { temperature: 0.2, maxTokens: 500 }
+  );
   return Response.json({ summary });
 }

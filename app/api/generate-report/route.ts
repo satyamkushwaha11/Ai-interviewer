@@ -1,4 +1,4 @@
-import { CHAT_MODEL, getOpenAI } from '@/app/lib/openai';
+import { getAIProvider } from '@/app/lib/ai';
 import { buildReportSystemPrompt } from '@/app/lib/prompts';
 import type { InterviewConfig, InterviewReport, TurnMessage } from '@/app/lib/types';
 
@@ -11,14 +11,14 @@ function stubReport(history: TurnMessage[]): InterviewReport {
       pairs.push({
         question: history[i].content,
         answer: history[i + 1].content,
-        feedback: 'Stubbed feedback (no OPENAI_API_KEY set).',
+        feedback: 'Stubbed feedback (no AI provider configured).',
         score: 7,
       });
     }
   }
   return {
     overall: 7,
-    summary: 'Stubbed report — set OPENAI_API_KEY for real analysis.',
+    summary: 'Stubbed report — set OPENAI_API_KEY or GEMINI_API_KEY for real analysis.',
     communication: { score: 7, notes: 'Stub' },
     knowledge: { score: 7, notes: 'Stub' },
     problemSolving: { score: 7, notes: 'Stub' },
@@ -35,8 +35,8 @@ export async function POST(request: Request) {
     history: TurnMessage[];
   };
 
-  const openai = getOpenAI();
-  if (!openai) return Response.json({ report: stubReport(history) });
+  const ai = getAIProvider();
+  if (!ai) return Response.json({ report: stubReport(history) });
 
   const transcript = history
     .map((m) => `${m.role === 'interviewer' ? 'Interviewer' : 'Candidate'}: ${m.content}`)
@@ -44,18 +44,15 @@ export async function POST(request: Request) {
 
   const contextBlock = `Mode: ${config.mode}\nRole: ${config.role || 'n/a'}\nDifficulty: ${config.difficulty}\n\nResume:\n${config.resume}\n\n${config.jd ? `Job description:\n${config.jd}\n\n` : ''}Transcript:\n${transcript}`;
 
-  const completion = await openai.chat.completions.create({
-    model: CHAT_MODEL,
-    messages: [
-      { role: 'system', content: buildReportSystemPrompt() },
-      { role: 'user', content: contextBlock },
-    ],
-    response_format: { type: 'json_object' },
-    temperature: 0.2,
-    max_tokens: 2500,
-  });
+  const raw =
+    (await ai.chat(
+      [
+        { role: 'system', content: buildReportSystemPrompt() },
+        { role: 'user', content: contextBlock },
+      ],
+      { temperature: 0.2, maxTokens: 2500, json: true }
+    )) || '{}';
 
-  const raw = completion.choices[0]?.message?.content ?? '{}';
   let report: InterviewReport;
   try {
     report = JSON.parse(raw) as InterviewReport;
@@ -65,3 +62,11 @@ export async function POST(request: Request) {
   }
   return Response.json({ report });
 }
+
+
+
+
+
+
+
+

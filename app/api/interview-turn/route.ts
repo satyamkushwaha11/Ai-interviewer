@@ -1,4 +1,4 @@
-import { CHAT_MODEL, getOpenAI } from '@/app/lib/openai';
+import { getAIProvider, type ChatMessage } from '@/app/lib/ai';
 import { buildInterviewerSystemPrompt } from '@/app/lib/prompts';
 import type { InterviewConfig, TurnMessage } from '@/app/lib/types';
 
@@ -16,8 +16,8 @@ export async function POST(request: Request) {
   const asked = history.filter((m) => m.role === 'interviewer').length;
   const target = config.targetTurns ?? 12;
 
-  const openai = getOpenAI();
-  if (!openai) {
+  const ai = getAIProvider();
+  if (!ai) {
     const stub =
       asked === 0
         ? "Hi, thanks for joining. Let's start — can you walk me through your background?"
@@ -29,22 +29,15 @@ export async function POST(request: Request) {
 
   const system = buildInterviewerSystemPrompt(config);
   const windowed = history.slice(-HISTORY_WINDOW);
-  const messages = [
-    { role: 'system' as const, content: system },
+  const messages: ChatMessage[] = [
+    { role: 'system', content: system },
     ...windowed.map((m) => ({
       role: (m.role === 'interviewer' ? 'assistant' : 'user') as 'assistant' | 'user',
       content: m.content,
     })),
   ];
 
-  const completion = await openai.chat.completions.create({
-    model: CHAT_MODEL,
-    messages,
-    temperature: 0.7,
-    max_tokens: 200,
-  });
-
-  const raw = completion.choices[0]?.message?.content?.trim() ?? '';
+  const raw = (await ai.chat(messages, { temperature: 0.7, maxTokens: 200 })).trim();
   const done = raw.includes(END_TOKEN);
   const question = raw.replace(END_TOKEN, '').trim();
   return Response.json({ question, done });
