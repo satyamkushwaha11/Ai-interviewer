@@ -12,10 +12,12 @@ export async function POST(request: Request) {
     mode: InterviewMode;
   };
 
+  const fallbackSummary = () =>
+    `Candidate:\n- Background: (see resume)\n- Stack: (see resume)\n\n${mode === 'targeted' && jd ? `Role target:\n- Role: ${role || 'n/a'}\n- JD: ${jd.slice(0, 200)}\n` : ''}`;
+
   const ai = getAIProvider();
   if (!ai) {
-    const fallback = `Candidate:\n- Background: (see resume)\n- Stack: (see resume)\n\n${mode === 'targeted' && jd ? `Role target:\n- Role: ${role || 'n/a'}\n- JD: ${jd.slice(0, 200)}\n` : ''}`;
-    return Response.json({ summary: fallback });
+    return Response.json({ summary: fallbackSummary() });
   }
 
   const userBlock = [
@@ -27,12 +29,17 @@ export async function POST(request: Request) {
     .filter(Boolean)
     .join('\n\n');
 
-  const summary = await ai.chat(
-    [
-      { role: 'system', content: buildProfileSummaryPrompt() },
-      { role: 'user', content: userBlock },
-    ],
-    { temperature: 0.2, maxTokens: 500 }
-  );
-  return Response.json({ summary });
+  try {
+    const summary = await ai.chat(
+      [
+        { role: 'system', content: buildProfileSummaryPrompt() },
+        { role: 'user', content: userBlock },
+      ],
+      { temperature: 0.2, maxTokens: 500 }
+    );
+    return Response.json({ summary: summary || fallbackSummary() });
+  } catch (err) {
+    console.error('summarize-profile failed:', err);
+    return Response.json({ summary: fallbackSummary() });
+  }
 }

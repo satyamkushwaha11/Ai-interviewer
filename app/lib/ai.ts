@@ -106,6 +106,14 @@ const geminiProvider: AIProvider = {
         parts: [{ text: m.content }],
       }));
 
+    // Gemini rejects a request with empty `contents` (HTTP 400). This happens
+    // when the only input is a system prompt — e.g. the first interview turn,
+    // where the model is expected to open the conversation. OpenAI accepts a
+    // system-only request, so inject a minimal user turn to keep parity.
+    if (contents.length === 0) {
+      contents.push({ role: 'user', parts: [{ text: 'Begin.' }] });
+    }
+
     // Gemini 2.5+/3.x "flash" models spend hidden "thinking" tokens that count
     // against maxOutputTokens, which can starve short replies. Disable it so the
     // whole budget goes to the answer. Only flash models allow a 0 budget; pro

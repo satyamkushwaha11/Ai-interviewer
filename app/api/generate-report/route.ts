@@ -44,18 +44,29 @@ export async function POST(request: Request) {
 
   const contextBlock = `Mode: ${config.mode}\nRole: ${config.role || 'n/a'}\nDifficulty: ${config.difficulty}\n\nResume:\n${config.resume}\n\n${config.jd ? `Job description:\n${config.jd}\n\n` : ''}Transcript:\n${transcript}`;
 
-  const raw =
-    (await ai.chat(
-      [
-        { role: 'system', content: buildReportSystemPrompt() },
-        { role: 'user', content: contextBlock },
-      ],
-      { temperature: 0.2, maxTokens: 2500, json: true }
-    )) || '{}';
+  let raw: string;
+  try {
+    raw =
+      (await ai.chat(
+        [
+          { role: 'system', content: buildReportSystemPrompt() },
+          { role: 'user', content: contextBlock },
+        ],
+        { temperature: 0.2, maxTokens: 2500, json: true }
+      )) || '{}';
+  } catch (err) {
+    console.error('generate-report failed:', err);
+    const report = stubReport(history);
+    report.summary = 'Report generation failed — showing stub.';
+    return Response.json({ report });
+  }
+
+  // Models sometimes wrap JSON in ```json fences despite instructions.
+  const cleaned = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
 
   let report: InterviewReport;
   try {
-    report = JSON.parse(raw) as InterviewReport;
+    report = JSON.parse(cleaned) as InterviewReport;
   } catch {
     report = stubReport(history);
     report.summary = 'Report parse failed — showing stub.';
