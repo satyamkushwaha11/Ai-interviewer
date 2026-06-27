@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Interviewer",
-  description: "Practice interviews with an AI interviewer tuned to your resume and role.",
+  title: "Interviewly — Realistic AI mock interviews",
+  description:
+    "Practice with a live AI interviewer tuned to your resume and target role. Technical and behavioral rounds, real follow-ups, and a graded report.",
 };
 
 export default function RootLayout({

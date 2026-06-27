@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Difficulty, Gender, InterviewConfig, InterviewMode } from '@/app/lib/types';
+import type { Difficulty, Gender, InterviewConfig, InterviewFocus, InterviewMode } from '@/app/lib/types';
 
 interface Props {
   onStart: (config: InterviewConfig) => void;
@@ -14,12 +14,19 @@ const DIFFICULTIES: { value: Difficulty; label: string; hint: string }[] = [
   { value: 'brutal', label: 'Brutal', hint: 'Top-tier, unforgiving' },
 ];
 
+const FOCUSES: { value: InterviewFocus; label: string; hint: string }[] = [
+  { value: 'mixed', label: 'Mixed', hint: 'Technical + behavioral' },
+  { value: 'technical', label: 'Technical', hint: 'Tech depth + design' },
+  { value: 'behavioral', label: 'Behavioral', hint: 'Experience + STAR' },
+];
+
 export default function SetupForm({ onStart }: Props) {
   const [mode, setMode] = useState<InterviewMode>('targeted');
   const [resume, setResume] = useState('');
   const [jd, setJd] = useState('');
   const [role, setRole] = useState('');
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+  const [focus, setFocus] = useState<InterviewFocus>('mixed');
   const [durationMin, setDurationMin] = useState(15);
   const [gender, setGender] = useState<Gender>('female');
   const [parsing, setParsing] = useState(false);
@@ -51,6 +58,7 @@ export default function SetupForm({ onStart }: Props) {
       jd: mode === 'targeted' ? jd.trim() : undefined,
       role: role.trim() || undefined,
       difficulty,
+      focus,
       durationMin,
       gender,
     });
@@ -156,6 +164,23 @@ export default function SetupForm({ onStart }: Props) {
             >
               <div className="text-sm font-semibold tracking-wide">{d.label}</div>
               <div className="text-[11px] text-zinc-400 mt-1 leading-relaxed hidden sm:block">{d.hint}</div>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-base font-semibold text-zinc-100 tracking-wide mb-4">Interview Focus</h2>
+        <div className="grid grid-cols-3 gap-3">
+          {FOCUSES.map((f) => (
+            <button
+              key={f.value}
+              type="button"
+              onClick={() => setFocus(f.value)}
+              className={`pill p-4 text-center sm:text-left ${focus === f.value ? 'pill-active' : ''}`}
+            >
+              <div className="text-sm font-semibold tracking-wide">{f.label}</div>
+              <div className="text-[11px] text-zinc-400 mt-1 leading-relaxed hidden sm:block">{f.hint}</div>
             </button>
           ))}
         </div>

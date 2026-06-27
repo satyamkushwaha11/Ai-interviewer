@@ -2,6 +2,9 @@ export type Difficulty = 'easy' | 'medium' | 'hard' | 'brutal';
 
 export type InterviewMode = 'targeted' | 'general';
 
+// What the interviewer should weight: technology depth, past-experience/behavioral, or a blend of both.
+export type InterviewFocus = 'mixed' | 'technical' | 'behavioral';
+
 export type Gender = 'male' | 'female';
 
 export interface InterviewConfig {
@@ -10,6 +13,7 @@ export interface InterviewConfig {
   jd?: string;
   role?: string;
   difficulty: Difficulty;
+  focus?: InterviewFocus;
   durationMin: number;
   gender: Gender;
   summary?: string;

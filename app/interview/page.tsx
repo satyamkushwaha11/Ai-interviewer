@@ -1,16 +1,17 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
-import Interview from './components/Interview';
-import Report from './components/Report';
-import SetupForm from './components/SetupForm';
-import type { InterviewConfig, InterviewReport, TurnMessage } from './lib/types';
+import Interview from '../components/Interview';
+import Report from '../components/Report';
+import SetupForm from '../components/SetupForm';
+import type { InterviewConfig, InterviewReport, TurnMessage } from '../lib/types';
 
 type Step = 'setup' | 'preparing' | 'interview' | 'generating' | 'report';
 
 const TURNS_PER_MIN = 0.8;
 
-export default function Home() {
+export default function InterviewPage() {
   const [step, setStep] = useState<Step>('setup');
   const [config, setConfig] = useState<InterviewConfig | null>(null);
   const [report, setReport] = useState<InterviewReport | null>(null);
@@ -60,29 +61,37 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-zinc-800/60">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-sky-500 flex items-center justify-center text-xs font-semibold">AI</div>
-            <span className="font-semibold tracking-tight">Interviewer</span>
+    <div className="min-h-screen flex flex-col">
+      <header className="border-b border-zinc-800/60 bg-zinc-950/70 backdrop-blur-xl sticky top-0 z-40">
+        <div className="max-w-5xl mx-auto px-6 py-3.5 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-sky-500 flex items-center justify-center text-xs font-bold text-white">
+              AI
+            </div>
+            <span className="font-semibold tracking-tight">Interviewly</span>
+          </Link>
+          <div className="flex items-center gap-5">
+            <Link href="/pricing" className="nav-link hidden sm:inline">
+              Pricing
+            </Link>
+            <Link href="/" className="nav-link">
+              ← Home
+            </Link>
           </div>
-          <span className="text-xs text-zinc-500 hidden sm:inline">Powered by OpenAI</span>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-10">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-6 py-10">
         {step === 'setup' && (
           <>
-            <div className="text-center mb-12">
-              <div className="inline-block text-xs uppercase tracking-[0.2em] text-zinc-500 mb-4 font-semibold">
-                AI Interview System
-              </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6">
-                Enterprise Interview Prep.
+            <div className="text-center mb-10">
+              <span className="badge mb-4">Step 1 · Configure</span>
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+                Set up your interview
               </h1>
-              <p className="mt-4 text-zinc-400 max-w-xl mx-auto text-lg leading-relaxed">
-                Upload a candidate profile, provide a target role, and initiate a rigorous, hyper-realistic technical or behavioral interview.
+              <p className="mt-3 text-zinc-400 max-w-xl mx-auto">
+                Add your resume and target role, pick the focus and rigor, and we&apos;ll run a
+                realistic, graded session.
               </p>
             </div>
             <div className="animate-fade-in-up">
@@ -98,9 +107,7 @@ export default function Home() {
             </div>
           </div>
         )}
-        {step === 'interview' && config && (
-          <Interview config={config} onFinish={handleFinish} />
-        )}
+        {step === 'interview' && config && <Interview config={config} onFinish={handleFinish} />}
         {step === 'generating' && (
           <div className="text-center py-24">
             <div className="inline-flex items-center gap-3 text-zinc-400">
@@ -110,9 +117,7 @@ export default function Home() {
           </div>
         )}
         {step === 'report' && report && <Report report={report} onRestart={handleRestart} />}
-        {error && (
-          <div className="mt-6 text-sm text-rose-400 text-center">{error}</div>
-        )}
+        {error && <div className="mt-6 text-sm text-rose-400 text-center">{error}</div>}
       </main>
     </div>
   );

@@ -89,7 +89,7 @@ export default function Interview({ config, onFinish }: Props) {
         const res = await fetch('/api/tts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text, gender: config.gender }),
+          body: JSON.stringify({ text, gender: config.gender, difficulty: config.difficulty }),
         });
         if (!res.ok) throw new Error('TTS failed');
         const blob = await res.blob();
@@ -155,7 +155,7 @@ export default function Interview({ config, onFinish }: Props) {
         });
       }
     },
-    [config.gender],
+    [config.gender, config.difficulty],
   );
 
   const fetchNext = useCallback(
