@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Icon from '@/app/components/Icon';
 
 export const metadata: Metadata = {
   title: 'Pricing — Interviewly',
@@ -86,51 +87,59 @@ const FAQ: { q: string; a: string }[] = [
 
 export default function PricingPage() {
   return (
-    <div className="max-w-6xl mx-auto px-6 pt-20 pb-10">
-      <div className="text-center mb-14">
+    <div className="relative mx-auto max-w-[1440px] px-5 pb-10 pt-20 md:px-16">
+      <div className="pointer-events-none absolute left-1/2 top-10 -z-10 h-96 w-96 -translate-x-1/2 rounded-full bg-primary-fixed/5 blur-[140px]" />
+
+      <div className="mb-14 text-center">
         <span className="badge mb-5">Pricing</span>
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight gradient-hero">
+        <h1 className="font-display text-headline-lg-mobile text-tertiary md:text-headline-lg">
           Simple plans for serious prep
         </h1>
-        <p className="mt-5 text-lg text-zinc-400 max-w-xl mx-auto">
+        <p className="mx-auto mt-5 max-w-xl text-body-lg text-on-surface-variant">
           Start free and upgrade when you are interviewing for real. No credit card required to
           begin.
         </p>
-        <div className="mt-4 inline-flex items-center gap-2 text-xs text-emerald-300 bg-emerald-500/10 border border-emerald-500/25 rounded-full px-3 py-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+        <div className="badge mt-6">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary-fixed" />
           Free for everyone during beta
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 items-start">
+      <div className="grid items-start gap-6 md:grid-cols-3">
         {PLANS.map((plan) => (
           <div
             key={plan.name}
-            className={`glass p-7 relative ${
-              plan.highlight ? 'ring-1 ring-indigo-500/60 lift' : ''
+            className={`glass-panel relative rounded-2xl p-7 ${
+              plan.highlight ? 'glow-accent lift border-primary-fixed/40' : ''
             }`}
           >
             {plan.highlight && (
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 badge">Most popular</span>
+              <span className="badge absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-surface-container-high">
+                Most popular
+              </span>
             )}
-            <h2 className="text-lg font-semibold text-zinc-100">{plan.name}</h2>
-            <p className="text-sm text-zinc-500 mt-1 mb-5 min-h-[2.5rem]">{plan.tagline}</p>
-            <div className="flex items-baseline gap-1.5 mb-6">
-              <span className="text-4xl font-bold text-white">{plan.price}</span>
-              <span className="text-sm text-zinc-500">/ {plan.cadence}</span>
+            <h2 className="font-display text-headline-md text-on-surface">{plan.name}</h2>
+            <p className="mb-5 mt-1 min-h-[2.5rem] text-body-md text-on-surface-variant/70">
+              {plan.tagline}
+            </p>
+            <div className="mb-6 flex items-baseline gap-1.5">
+              <span className="font-display text-headline-lg-mobile font-bold text-tertiary">
+                {plan.price}
+              </span>
+              <span className="text-label-md text-on-surface-variant/70">/ {plan.cadence}</span>
             </div>
             <Link
               href={plan.href}
-              className={`${plan.highlight ? 'btn-primary' : 'btn-secondary'} w-full block text-center py-3 text-sm font-semibold`}
+              className={`${
+                plan.highlight ? 'btn-accent' : 'btn-ghost'
+              } block w-full py-3 text-center font-display text-label-md`}
             >
               {plan.cta}
             </Link>
             <ul className="mt-7 space-y-3">
               {plan.features.map((f) => (
-                <li key={f} className="flex items-start gap-3 text-sm text-zinc-300">
-                  <svg className="w-4 h-4 mt-0.5 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
+                <li key={f} className="flex items-start gap-3 text-body-md text-on-surface">
+                  <Icon name="check" className="mt-1 h-4 w-4 flex-none text-primary-fixed" />
                   {f}
                 </li>
               ))}
@@ -140,15 +149,17 @@ export default function PricingPage() {
       </div>
 
       {/* FAQ */}
-      <div className="max-w-3xl mx-auto mt-24">
-        <h2 className="text-2xl font-bold tracking-tight text-white text-center mb-10">
+      <div className="mx-auto mt-24 max-w-3xl">
+        <h2 className="mb-10 text-center font-display text-headline-md text-tertiary">
           Frequently asked questions
         </h2>
         <div className="space-y-4">
           {FAQ.map((item) => (
-            <div key={item.q} className="glass p-6">
-              <h3 className="font-semibold text-zinc-100 mb-2">{item.q}</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">{item.a}</p>
+            <div key={item.q} className="glass-panel rounded-2xl p-6">
+              <h3 className="mb-2 font-display text-label-md font-semibold text-on-surface">
+                {item.q}
+              </h3>
+              <p className="text-body-md leading-relaxed text-on-surface-variant">{item.a}</p>
             </div>
           ))}
         </div>

@@ -7,6 +7,25 @@ export type InterviewFocus = 'mixed' | 'technical' | 'behavioral';
 
 export type Gender = 'male' | 'female';
 
+/** One competency area the interview works through, in order. */
+export interface InterviewArea {
+  /** Stable slug, e.g. "database". */
+  key: string;
+  /** Shown to the candidate in the progress rail, e.g. "Database". */
+  title: string;
+  /** What the interviewer should actually probe in this area. */
+  focus: string;
+  /** Seed questions for this area. The interviewer adapts rather than reads them out. */
+  probes?: string[];
+}
+
+/** The ordered agenda for a session, derived from the role and resume. */
+export interface InterviewPlan {
+  /** e.g. "Fullstack Developer", "AI Engineer", "HR Generalist". */
+  roleFamily: string;
+  areas: InterviewArea[];
+}
+
 export interface InterviewConfig {
   mode: InterviewMode;
   resume: string;
@@ -18,6 +37,7 @@ export interface InterviewConfig {
   gender: Gender;
   summary?: string;
   targetTurns?: number;
+  plan?: InterviewPlan;
 }
 
 export interface TurnMessage {

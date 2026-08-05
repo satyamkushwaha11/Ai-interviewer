@@ -1,11 +1,21 @@
 import { getAIProvider, type ChatMessage } from '@/app/lib/ai';
-import { buildInterviewerSystemPrompt } from '@/app/lib/prompts';
+import { buildAreaSteer, buildInterviewerSystemPrompt } from '@/app/lib/prompts';
 import type { InterviewConfig, TurnMessage } from '@/app/lib/types';
 
 export const runtime = 'nodejs';
 
 const END_TOKEN = 'END_INTERVIEW';
 const HISTORY_WINDOW = 8; // keep last N messages (~4 turns)
+
+/**
+ * Which agenda area this turn belongs to — turns are spread evenly across the
+ * plan. Returns -1 when the session has no plan.
+ */
+export function currentAreaIndex(asked: number, target: number, areaCount: number): number {
+  if (areaCount <= 0) return -1;
+  const perArea = Math.max(1, target / areaCount);
+  return Math.min(areaCount - 1, Math.floor(asked / perArea));
+}
 
 export async function POST(request: Request) {
   const { config, history } = (await request.json()) as {
@@ -41,6 +51,17 @@ export async function POST(request: Request) {
       content: m.content,
     })),
   ];
+
+  // Appended last so the cached prefix (system + history) stays byte-stable
+  // while the model still gets an explicit steer to the current agenda area.
+  const areas = config.plan?.areas ?? [];
+  const areaIndex = currentAreaIndex(asked, target, areas.length);
+  if (areaIndex >= 0 && asked < target) {
+    messages.push({
+      role: 'system',
+      content: buildAreaSteer(areas[areaIndex], areaIndex, areas.length),
+    });
+  }
 
   try {
     const raw = (await ai.chat(messages, { temperature: 0.7, maxTokens: 200 })).trim();

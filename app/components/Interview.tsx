@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Avatar3D from './Avatar3D';
+import Icon from './Icon';
+import { loadVoices, pickVoice, pitchFor } from '@/app/lib/browserVoice';
 import type { InterviewConfig, TurnMessage } from '@/app/lib/types';
 
 interface Props {
@@ -17,16 +18,39 @@ interface AudioGraph {
   buffer: Uint8Array<ArrayBuffer>;
 }
 
+/** Resting heights (px) for the orb's equaliser bars. */
+const ORB_BARS = [26, 44, 34, 56, 38, 48, 28];
+
+/** Used only when a session somehow arrives without a role plan. */
+const FALLBACK_STAGES: { key: string; title: string; hint: string }[] = [
+  { key: 'opening', title: 'Opening', hint: 'Greeting & first question' },
+  { key: 'core', title: 'Core questions', hint: 'Depth & follow-ups' },
+  { key: 'wrap-up', title: 'Wrap-up', hint: 'Final probes & sign-off' },
+];
+
+function formatClock(seconds: number) {
+  const m = Math.floor(seconds / 60)
+    .toString()
+    .padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
 export default function Interview({ config, onFinish }: Props) {
   const [history, setHistory] = useState<TurnMessage[]>([]);
   const [phase, setPhase] = useState<Phase>('loading');
   const [currentQuestion, setCurrentQuestion] = useState('');
-  
+
   // STT State
   const [committedText, setCommittedText] = useState('');
   const [interimText, setInterimText] = useState('');
   const [sttSupported, setSttSupported] = useState(true);
   const [isMicActive, setIsMicActive] = useState(false);
+
+  // UI State
+  const [typing, setTyping] = useState(false);
+  const [transcriptOpen, setTranscriptOpen] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
 
   const recognitionRef = useRef<unknown>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -35,13 +59,30 @@ export default function Interview({ config, onFinish }: Props) {
   const rafRef = useRef<number | null>(null);
   const historyRef = useRef<TurnMessage[]>(history);
   const scrollRef = useRef<HTMLDivElement>(null);
-  
+  const orbRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => { historyRef.current = history; }, [history]);
-  
+
   const initialFetchDone = useRef(false);
   const shouldListenRef = useRef(false);
+  // Mirrors of the draft so recognition callbacks and submit read the same
+  // values without depending on render closures.
+  const committedRef = useRef('');
+  const interimRef = useRef('');
+  // Set while an answer is being submitted so a late `onend` cannot push the
+  // just-sent text back into the next answer.
+  const suppressCommitRef = useRef(false);
 
-  // Auto-scroll to bottom of chat
+  useEffect(() => { committedRef.current = committedText; }, [committedText]);
+  useEffect(() => { interimRef.current = interimText; }, [interimText]);
+
+  // Session clock
+  useEffect(() => {
+    const id = setInterval(() => setElapsed((e) => e + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Auto-scroll to bottom of transcript
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -77,6 +118,12 @@ export default function Interview({ config, onFinish }: Props) {
         const rms = Math.sqrt(sum / graph.buffer.length);
         amplitudeRef.current = rms;
       }
+      // Drive the orb's bars straight off the analyser, bypassing React state
+      // so this stays a style write rather than a re-render every frame.
+      orbRef.current?.style.setProperty(
+        '--amp',
+        (1 + Math.min(1.4, amplitudeRef.current * 7)).toFixed(3),
+      );
       rafRef.current = requestAnimationFrame(loop);
     };
     rafRef.current = requestAnimationFrame(loop);
@@ -115,21 +162,24 @@ export default function Interview({ config, onFinish }: Props) {
           audio.play().catch(() => resolve());
         });
       } catch {
-        // Fallback to browser TTS if API fails
+        // Fallback to browser TTS if the API is unavailable (e.g. an
+        // OpenAI-compatible gateway with no audio/speech endpoint).
+        if (!('speechSynthesis' in window)) return;
+        const voices = await loadVoices();
+        const voice = pickVoice(voices, config.gender);
+
         await new Promise<void>((resolve) => {
-          if (!('speechSynthesis' in window)) {
-            resolve();
-            return;
-          }
           window.speechSynthesis.cancel(); // Cancel any previous speech
           const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = 'en-US';
-          const voices = window.speechSynthesis.getVoices();
-          const isFemale = config.gender === 'female';
-          const voice = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes(isFemale ? 'female' : 'male')) || voices.find(v => v.lang.startsWith('en')) || voices[0];
+          utterance.lang = voice?.lang || 'en-US';
           if (voice) utterance.voice = voice;
-          
-          let fakeSyncRaf: number;
+          utterance.pitch = pitchFor(config.gender, voice);
+          utterance.rate = 0.98;
+
+          let fakeSyncRaf: number | null = null;
+          let started = false;
+          let settled = false;
+
           const fakeSyncLoop = () => {
             if (window.speechSynthesis.speaking) {
               amplitudeRef.current = 0.3 + Math.random() * 0.4;
@@ -138,20 +188,49 @@ export default function Interview({ config, onFinish }: Props) {
               amplitudeRef.current = 0;
             }
           };
-          
-          utterance.onstart = () => fakeSyncLoop();
-          utterance.onend = () => {
-            cancelAnimationFrame(fakeSyncRaf);
+
+          // Chrome drops `onend` for long utterances and while backgrounded. If
+          // this promise never settled the interview would hang on "speaking"
+          // forever, with the mic disabled — so every exit routes through here.
+          const finish = () => {
+            if (settled) return;
+            settled = true;
+            clearInterval(keepAlive);
+            clearTimeout(watchdog);
+            if (fakeSyncRaf !== null) cancelAnimationFrame(fakeSyncRaf);
             amplitudeRef.current = 0;
             resolve();
           };
-          utterance.onerror = () => {
-            cancelAnimationFrame(fakeSyncRaf);
-            amplitudeRef.current = 0;
-            resolve();
+
+          // Chrome pauses synthesis after ~15s; a pause/resume ping keeps it going.
+          const keepAlive = setInterval(() => {
+            if (!started) return;
+            if (!window.speechSynthesis.speaking) {
+              finish();
+              return;
+            }
+            window.speechSynthesis.pause();
+            window.speechSynthesis.resume();
+          }, 5000);
+
+          // Hard ceiling derived from length, so a silent failure cannot strand us.
+          const estimatedMs = Math.min(90_000, 5_000 + text.split(/\s+/).length * 450);
+          const watchdog = setTimeout(finish, estimatedMs);
+
+          utterance.onstart = () => {
+            started = true;
+            fakeSyncLoop();
           };
-          
-          window.speechSynthesis.speak(utterance);
+          utterance.onend = finish;
+          utterance.onerror = finish;
+
+          // A throw here would reject playTts and strand the turn on "speaking",
+          // leaving the candidate with a disabled mic and no way to answer.
+          try {
+            window.speechSynthesis.speak(utterance);
+          } catch {
+            finish();
+          }
         });
       }
     },
@@ -173,7 +252,12 @@ export default function Interview({ config, onFinish }: Props) {
       ];
       setHistory(nextHistory);
       setCurrentQuestion(data.question);
-      await playTts(data.question);
+      // Audio is a nicety; never let it block the candidate from answering.
+      try {
+        await playTts(data.question);
+      } catch (err) {
+        console.error('TTS playback failed, continuing without audio:', err);
+      }
       if (data.done) {
         setPhase('done');
         onFinish(nextHistory);
@@ -208,31 +292,44 @@ export default function Interview({ config, onFinish }: Props) {
     rec.continuous = true;
     rec.interimResults = true;
     rec.lang = 'en-US';
-    
+
     rec.onstart = () => setIsMicActive(true);
     rec.onend = () => {
       setIsMicActive(false);
-      // When the session ends natively, commit the interim text
-      setCommittedText(prev => prev + (prev && interimText ? ' ' : '') + interimText);
-      setInterimText('');
-      
+
+      // The answer has already been sent — do not resurrect its text.
+      if (suppressCommitRef.current) return;
+
+      // When the session ends natively, commit the interim text.
+      const interim = interimRef.current;
+      if (interim) {
+        const committed = committedRef.current;
+        const merged = committed + (committed ? ' ' : '') + interim;
+        committedRef.current = merged;
+        interimRef.current = '';
+        setCommittedText(merged);
+        setInterimText('');
+      }
+
       if (shouldListenRef.current) {
         try {
           rec.start();
         } catch {}
       }
     };
-    
+
     rec.onresult = (event) => {
       let sessionText = '';
       for (let i = 0; i < event.results.length; i++) {
         sessionText += event.results[i][0].transcript;
       }
+      interimRef.current = sessionText;
       setInterimText(sessionText);
     };
     rec.onerror = () => {};
     recognitionRef.current = rec;
-  }, [interimText]);
+    // Built once: the handlers read refs, so they never need rebinding.
+  }, []);
 
   useEffect(() => {
     if (initialFetchDone.current) return;
@@ -266,18 +363,72 @@ export default function Interview({ config, onFinish }: Props) {
     } catch {}
   };
 
+  // Voice-first: open the mic as soon as the interviewer stops talking, and
+  // close it while they are speaking or thinking.
+  useEffect(() => {
+    if (!sttSupported) return;
+    if (phase === 'listening') startListening();
+    else stopListening();
+  }, [phase, sttSupported]);
+
   const submitAnswer = async () => {
-    stopListening();
-    const finalAnswer = (committedText + (committedText && interimText ? ' ' : '') + interimText).trim();
+    const committed = committedRef.current;
+    const interim = interimRef.current;
+    const finalAnswer = (committed + (committed && interim ? ' ' : '') + interim).trim();
     if (!finalAnswer) return;
+
+    suppressCommitRef.current = true;
+    stopListening();
+
+    committedRef.current = '';
+    interimRef.current = '';
+    setCommittedText('');
+    setInterimText('');
+
     const updated: TurnMessage[] = [
       ...historyRef.current,
       { role: 'candidate', content: finalAnswer },
     ];
     setHistory(updated);
-    setCommittedText('');
-    setInterimText('');
-    await fetchNext(updated);
+    try {
+      await fetchNext(updated);
+    } finally {
+      suppressCommitRef.current = false;
+    }
+  };
+
+  /** Cut the interviewer off; playTts resolves and the turn advances to listening. */
+  const skipSpeech = () => {
+    audioRef.current?.pause();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  };
+
+  /**
+   * Switching the mic off sends the answer.
+   *
+   * Keyed off whether a draft exists rather than `isMicActive`: Chrome ends
+   * recognition on its own after a silence and the restart can fail, which
+   * would otherwise leave the button showing "start" on a finished answer and
+   * swallow the click.
+   */
+  const handleMicClick = () => {
+    if (phase === 'speaking') {
+      skipSpeech();
+      return;
+    }
+    if ((committedRef.current + interimRef.current).trim()) {
+      submitAnswer();
+      return;
+    }
+    if (isMicActive) stopListening();
+    else startListening();
+  };
+
+  const repeatQuestion = async () => {
+    if (phase !== 'listening' || !currentQuestion) return;
+    stopListening();
+    await playTts(currentQuestion);
+    setPhase('listening');
   };
 
   const endEarly = () => {
@@ -290,157 +441,423 @@ export default function Interview({ config, onFinish }: Props) {
   };
 
   const phaseLabel = {
-    loading: 'Initializing SYS.CORE',
-    thinking: 'Processing Context',
-    speaking: 'Transmitting',
-    listening: 'Awaiting Input',
-    done: 'Session Terminated',
+    loading: 'Initializing session',
+    thinking: 'Analyzing your answer',
+    speaking: 'Interviewer speaking',
+    listening: 'Listening…',
+    done: 'Session complete',
   }[phase];
-
-  const phaseDotColor = phase === 'listening' ? 'bg-emerald-400' : phase === 'speaking' ? 'bg-indigo-400' : 'bg-zinc-500';
 
   const combinedDraft = committedText + (committedText && interimText ? ' ' : '') + interimText;
 
-  return (
-    <div className="max-w-6xl mx-auto flex flex-col md:flex-row h-[85vh] relative bg-zinc-950 border border-zinc-800/60 rounded-xl overflow-hidden shadow-2xl">
-      
-      {/* Left Column: Mascot & Status */}
-      <div className="w-full md:w-[35%] lg:w-[30%] border-b md:border-b-0 md:border-r border-zinc-800/60 bg-zinc-900/30 flex flex-col items-center justify-center p-8 relative shrink-0">
-        <button
-          type="button"
-          onClick={endEarly}
-          className="absolute top-4 left-4 text-[10px] font-semibold uppercase tracking-wider text-zinc-500 hover:text-rose-400 transition-colors px-3 py-1 border border-transparent hover:border-rose-900/50 hover:bg-rose-950/30 rounded"
-        >
-          End Session
-        </button>
+  const asked = history.filter((m) => m.role === 'interviewer').length;
+  const totalTurns = Math.max(config.targetTurns ?? 12, asked);
 
-        <div className="w-40 h-40 sm:w-56 sm:h-56 mb-8 relative">
-          <div className={`absolute inset-0 bg-emerald-500/20 rounded-full blur-3xl transition-opacity duration-500 ${phase === 'speaking' ? 'opacity-100' : 'opacity-0'}`} />
-          <Avatar3D
-            gender={config.gender}
-            amplitudeRef={amplitudeRef}
-            speaking={phase === 'speaking'}
-          />
-        </div>
-        
-        <div className="text-center z-10">
-          <div className="text-base font-bold text-zinc-100 tracking-wide mb-3">
-            {config.role ? `System: ${config.role}` : 'System: AI Interviewer'}
-          </div>
-          <div className="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-400 bg-zinc-950/50 px-4 py-2 rounded-full border border-zinc-800/80">
-            <span className={`w-2 h-2 rounded-full shadow-lg ${phaseDotColor} ${phase === 'thinking' ? 'animate-pulse' : ''}`} />
-            {phaseLabel}
-          </div>
+  // The rail mirrors the agenda the interviewer is actually working through,
+  // using the same even split as the server (see currentAreaIndex).
+  const stages =
+    config.plan?.areas.map((a) => ({ key: a.key, title: a.title, hint: a.focus })) ??
+    FALLBACK_STAGES;
+  const answered = Math.max(0, asked - 1);
+  const stageIndex =
+    phase === 'done'
+      ? stages.length
+      : Math.min(stages.length - 1, Math.floor(answered / Math.max(1, totalTurns / stages.length)));
+
+  const showComposer = typing || !sttSupported;
+  const hasDraft = combinedDraft.trim().length > 0;
+  const micLabel =
+    phase === 'speaking'
+      ? 'Skip and answer now'
+      : hasDraft
+        ? 'Stop and send answer'
+        : isMicActive
+          ? 'Stop listening'
+          : 'Start speaking';
+
+  const sidebar = (
+    <>
+      <div>
+        <h2 className="mb-1 font-display text-label-md uppercase tracking-widest text-on-surface-variant">
+          Interview plan
+        </h2>
+        {config.plan?.roleFamily && (
+          <p className="mb-5 font-display text-label-sm text-primary-fixed">
+            {config.plan.roleFamily}
+          </p>
+        )}
+        <div className="relative">
+          <div className="absolute bottom-2 left-3 top-2 w-0.5 bg-surface-container-high" />
+          {stages.map((stage, i) => {
+            const done = i < stageIndex;
+            const active = i === stageIndex;
+            return (
+              <div
+                key={stage.key}
+                className={`relative z-10 mb-8 flex items-start gap-4 ${
+                  !done && !active ? 'opacity-50' : ''
+                }`}
+              >
+                <div
+                  className={`flex h-6 w-6 flex-none items-center justify-center rounded-full ${
+                    done
+                      ? 'bg-primary-fixed shadow-[0_0_10px_rgba(185,246,0,0.3)]'
+                      : active
+                        ? 'border-2 border-primary-fixed bg-background'
+                        : 'border-2 border-surface-variant bg-background'
+                  }`}
+                >
+                  {done && <Icon name="check" className="h-3.5 w-3.5 text-on-primary-fixed" />}
+                  {active && <div className="h-2 w-2 animate-pulse rounded-full bg-primary-fixed" />}
+                </div>
+                <div>
+                  <h3
+                    className={`font-display text-label-md ${
+                      active ? 'font-bold text-primary-fixed' : 'text-on-surface'
+                    }`}
+                  >
+                    {stage.title}
+                  </h3>
+                  <p
+                    className={`mt-1 line-clamp-2 font-display text-label-sm ${
+                      active ? 'text-primary-fixed/80' : 'text-on-surface-variant'
+                    }`}
+                  >
+                    {done ? 'Completed' : active ? 'In progress' : stage.hint}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Right Column: Chat Interface */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-gradient-to-b from-zinc-950 to-zinc-900/50">
-        
-        {/* Chat Feed */}
-        <div 
-          ref={scrollRef}
-          className="flex-1 overflow-y-auto p-6 space-y-6"
-        >
+      {/* Transcript */}
+      <div className="flex flex-col">
+        <h2 className="mb-3 font-display text-label-md uppercase tracking-widest text-on-surface-variant">
+          Transcript
+        </h2>
+        <div ref={scrollRef} className="scroll-slim max-h-72 min-h-32 space-y-4 overflow-y-auto pr-1">
           {history.length === 0 && (
-            <div className="flex items-center justify-center h-full text-zinc-600 font-mono text-sm tracking-widest uppercase">
-              [ Establishing Secure Connection ]
-            </div>
+            <p className="font-display text-label-sm text-on-surface-variant/60">
+              Establishing secure connection…
+            </p>
           )}
           {history.map((m, i) => (
-            <div key={i} className={`flex w-full ${m.role === 'interviewer' ? 'justify-start' : 'justify-end'}`}>
-              <div className={`max-w-[85%] rounded-2xl px-5 py-4 shadow-md ${
-                m.role === 'interviewer' 
-                  ? 'bg-zinc-900 border border-zinc-800/80 text-zinc-300' 
-                  : 'bg-indigo-950/40 border border-indigo-900/50 text-indigo-100'
-              }`}>
-                <div className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${
-                  m.role === 'interviewer' ? 'text-zinc-500' : 'text-indigo-400'
-                }`}>
-                  {m.role === 'interviewer' ? 'Interviewer' : 'You'}
-                </div>
-                <div className="text-sm leading-relaxed font-medium">
-                  {m.content}
-                </div>
+            <div
+              key={i}
+              className={`border-l-2 pl-3 ${
+                m.role === 'interviewer' ? 'border-primary-fixed' : 'border-outline-variant'
+              }`}
+            >
+              <div className="mb-1 font-display text-label-sm uppercase tracking-widest text-on-surface-variant/60">
+                {m.role === 'interviewer' ? 'Interviewer' : 'You'}
               </div>
+              <p className="text-body-md leading-relaxed text-on-surface">{m.content}</p>
             </div>
           ))}
-          {/* Current typing draft indicator */}
-          {phase === 'listening' && combinedDraft && (
-            <div className="flex w-full justify-end animate-fade-in-up">
-              <div className="max-w-[85%] rounded-2xl px-5 py-4 bg-indigo-950/20 border border-indigo-900/30 text-indigo-200/70 shadow-md">
-                <div className="text-[10px] font-bold uppercase tracking-widest mb-2 text-indigo-500/50">
-                  Drafting
+          {combinedDraft && (
+            <div className="border-l-2 border-primary-fixed/40 pl-3">
+              <div className="mb-1 font-display text-label-sm uppercase tracking-widest text-primary-fixed/60">
+                Drafting
+              </div>
+              <p className="text-body-md leading-relaxed text-on-surface-variant">
+                {combinedDraft}
+                <span className="ml-1.5 inline-block h-4 w-1.5 animate-pulse rounded-sm bg-primary-fixed align-middle" />
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="glass-panel mt-auto shrink-0 rounded-xl p-4">
+        <div className="mb-2 flex items-center gap-3">
+          <Icon name="analysis" className="h-5 w-5 text-primary-fixed" />
+          <span className="font-display text-label-sm text-on-surface">Analysis active</span>
+        </div>
+        <p className="font-display text-label-sm leading-relaxed text-on-surface-variant">
+          Tone, clarity, and problem-solving methodology are graded at the end of the session.
+        </p>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="flex min-h-screen flex-col overflow-hidden bg-background">
+      {/* Session header */}
+      <header className="fixed top-0 z-50 flex h-20 w-full items-center justify-between border-b border-white/5 bg-background/80 px-5 backdrop-blur-md md:px-16">
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={endEarly}
+            aria-label="End session"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-white/5 hover:text-primary-fixed"
+          >
+            <Icon name="close" />
+          </button>
+          <span className="font-display text-headline-md font-bold tracking-tight text-primary-fixed">
+            Interviewly
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setTranscriptOpen((v) => !v)}
+            className="glass-panel flex items-center gap-2 rounded-full px-4 py-2 font-display text-label-sm text-on-surface transition-colors hover:bg-white/10 lg:hidden"
+          >
+            <Icon name="chat" className="h-4 w-4" />
+            Transcript
+          </button>
+          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-container-high px-4 py-2">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-error" />
+            <span className="font-display text-label-sm text-on-surface">
+              {formatClock(elapsed)} REC
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex h-screen w-full pt-20">
+        {/* Sidebar */}
+        <aside className="hidden h-full w-80 flex-col gap-8 overflow-y-auto border-r border-white/5 bg-surface-container-low/50 p-8 backdrop-blur-xl lg:flex">
+          {sidebar}
+        </aside>
+
+        {/* Mobile transcript drawer */}
+        {transcriptOpen && (
+          <div className="fixed inset-0 z-40 flex lg:hidden">
+            <div
+              className="absolute inset-0 bg-black/60"
+              onClick={() => setTranscriptOpen(false)}
+              aria-hidden="true"
+            />
+            <aside className="relative ml-auto flex h-full w-[85%] max-w-sm flex-col gap-8 overflow-y-auto border-l border-white/5 bg-surface-container p-6 pt-24 backdrop-blur-xl">
+              <button
+                type="button"
+                onClick={() => setTranscriptOpen(false)}
+                aria-label="Close transcript"
+                className="absolute right-4 top-24 flex h-9 w-9 items-center justify-center rounded-full text-on-surface-variant hover:bg-white/5"
+              >
+                <Icon name="close" className="h-4 w-4" />
+              </button>
+              {sidebar}
+            </aside>
+          </div>
+        )}
+
+        {/* Central interaction zone */}
+        {/*
+          The scroll container must not centre its children: with
+          `justify-center`, overflow spills off both ends and the top of a long
+          question becomes unreachable. Centring happens on the inner wrapper
+          via `my-auto` + `min-h-full` instead.
+        */}
+        <section className="scroll-slim relative flex flex-1 flex-col overflow-y-auto px-5 py-8 md:px-16">
+          <div className="pointer-events-none fixed inset-0 flex items-center justify-center opacity-[0.07]">
+            <div className="h-[560px] w-[560px] rounded-full bg-primary-fixed blur-[150px]" />
+          </div>
+
+          <div className="relative my-auto flex w-full flex-col items-center">
+          {/* Current question */}
+          <div className="z-10 mb-10 max-w-3xl text-center">
+            <div className="badge mx-auto mb-6 w-fit">
+              <Icon name="chat" className="h-4 w-4" />
+              {asked > 0 ? `Question ${asked} of ${totalTurns}` : 'Connecting…'}
+            </div>
+            <h1 className="mx-auto mb-4 max-w-2xl font-display text-body-lg font-semibold leading-relaxed text-on-surface md:text-headline-md">
+              {currentQuestion || 'Establishing secure connection…'}
+            </h1>
+            <button
+              type="button"
+              onClick={repeatQuestion}
+              disabled={phase !== 'listening' || !currentQuestion}
+              className="mx-auto flex items-center gap-2 font-display text-label-md text-on-surface-variant transition-colors hover:text-primary-fixed disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <Icon name="replay" className="h-4 w-4" />
+              Repeat question
+            </button>
+          </div>
+
+          {/* Visualizer */}
+          <div className="relative z-10 mb-10 flex h-56 w-56 items-center justify-center">
+            {phase === 'speaking' && (
+              <>
+                <div className="pulse-ring absolute inset-0 rounded-full border border-primary-fixed/30" />
+                <div
+                  className="pulse-ring absolute inset-0 rounded-full border border-primary-fixed/20"
+                  style={{ animationDelay: '-0.5s' }}
+                />
+              </>
+            )}
+            <div
+              ref={orbRef}
+              className={`relative flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary-fixed to-surface-tint transition-shadow duration-500 ${
+                phase === 'speaking' ? 'ai-glow' : 'glow-accent'
+              }`}
+            >
+              <div className="absolute inset-0 flex items-center justify-center gap-1 opacity-30">
+                {ORB_BARS.map((h, i) => (
+                  <div
+                    key={i}
+                    className="w-1 rounded-full bg-black transition-transform duration-100 ease-out"
+                    style={{
+                      height: `${h}px`,
+                      transform:
+                        phase === 'speaking' ? 'scaleY(var(--amp, 1))' : 'scaleY(0.55)',
+                      transitionDelay: `${i * 15}ms`,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="z-10 flex flex-col items-center gap-6">
+            <p
+              className={`font-display text-label-md ${
+                phase === 'listening'
+                  ? 'animate-pulse text-primary-fixed'
+                  : 'text-on-surface-variant'
+              }`}
+            >
+              {phaseLabel}
+            </p>
+
+            <div className="flex items-center gap-6">
+              <button
+                type="button"
+                onClick={() => setTyping((v) => !v)}
+                aria-label="Type answer instead"
+                className={`glass-panel flex h-14 w-14 items-center justify-center rounded-full transition-all hover:bg-white/10 ${
+                  showComposer ? 'text-primary-fixed' : 'text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <Icon name="keyboard" />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleMicClick}
+                disabled={!sttSupported || (phase !== 'listening' && phase !== 'speaking')}
+                title={micLabel}
+                aria-label={micLabel}
+                className={`flex h-20 w-20 items-center justify-center rounded-full border-2 transition-all disabled:cursor-not-allowed disabled:opacity-40 ${
+                  isMicActive || phase === 'speaking'
+                    ? 'border-error bg-error/10 text-error shadow-[0_0_30px_rgba(255,180,171,0.2)]'
+                    : 'border-primary-fixed bg-surface-container-lowest text-primary-fixed shadow-[0_0_30px_rgba(185,246,0,0.15)] hover:bg-primary-fixed/10'
+                }`}
+              >
+                <Icon
+                  name={phase === 'speaking' ? 'stop' : isMicActive ? 'stop' : 'mic'}
+                  className="h-8 w-8"
+                />
+              </button>
+
+              <button
+                type="button"
+                onClick={endEarly}
+                aria-label="End session"
+                title="End session"
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-error/30 bg-error/10 text-error transition-all hover:border-error/60 hover:bg-error/20 hover:shadow-[0_0_20px_rgba(255,180,171,0.2)]"
+              >
+                <Icon name="call-end" className="h-6 w-6" />
+              </button>
+            </div>
+
+            <p className="max-w-md text-center font-display text-label-sm text-on-surface-variant/60">
+              {!sttSupported
+                ? 'Speech recognition isn’t supported in this browser — type your answer below.'
+                : isMicActive
+                  ? 'Speak your answer, then tap the mic again to send it.'
+                  : phase === 'listening'
+                    ? 'Tap the mic to answer, or use the keyboard to type.'
+                    : ''}
+            </p>
+          </div>
+
+          {/* Live spoken draft — the send affordance for voice answers */}
+          {!showComposer && combinedDraft.trim() && (
+            <div className="animate-fade-in-up z-10 mt-8 w-full max-w-2xl">
+              <div className="glass-panel rounded-2xl p-4">
+                <div className="mb-2 font-display text-label-sm uppercase tracking-widest text-primary-fixed/70">
+                  Your answer
                 </div>
-                <div className="text-sm leading-relaxed font-medium">
+                <p className="max-h-40 overflow-y-auto text-body-md leading-relaxed text-on-surface">
                   {combinedDraft}
-                  <span className="inline-block w-1.5 h-4 ml-1.5 bg-indigo-400/80 animate-pulse align-middle rounded-sm" />
+                  {isMicActive && (
+                    <span className="ml-1.5 inline-block h-4 w-1.5 animate-pulse rounded-sm bg-primary-fixed align-middle" />
+                  )}
+                </p>
+                <div className="mt-3 flex items-center justify-between gap-4 border-t border-white/5 pt-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      committedRef.current = '';
+                      interimRef.current = '';
+                      setCommittedText('');
+                      setInterimText('');
+                    }}
+                    className="font-display text-label-sm text-on-surface-variant transition-colors hover:text-error"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    type="button"
+                    onClick={submitAnswer}
+                    disabled={phase !== 'listening'}
+                    className="btn-accent flex items-center gap-2 px-5 py-2 font-display text-label-md"
+                  >
+                    <Icon name="send" className="h-4 w-4" />
+                    Send answer
+                  </button>
                 </div>
               </div>
             </div>
           )}
-        </div>
 
-        {/* Input Area */}
-        <div className="flex-none p-4 bg-zinc-900/80 border-t border-zinc-800 backdrop-blur-md">
-          <div className="relative flex flex-col gap-3">
-            <textarea
-              className="w-full bg-zinc-950 border border-zinc-800/80 p-4 pr-12 text-sm leading-relaxed text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none rounded-xl transition-all shadow-inner"
-              rows={2}
-              value={committedText}
-              placeholder={
-                phase !== 'listening' ? 'Awaiting system...' :
-                sttSupported ? 'Type your response, or enable mic to speak...' : 'Type your response...'
-              }
-              onChange={(e) => setCommittedText(e.target.value)}
-              disabled={phase !== 'listening'}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  submitAnswer();
-                }
-              }}
-            />
-            
-            <div className="absolute right-4 top-4 flex items-center gap-2">
-              {sttSupported && phase === 'listening' && (
-                <button
-                  type="button"
-                  onClick={isMicActive ? stopListening : startListening}
-                  className={`p-2 rounded-lg transition-all ${
-                    isMicActive 
-                      ? 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 shadow-[0_0_15px_rgba(244,63,94,0.3)]' 
-                      : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200'
-                  }`}
-                  title={isMicActive ? "Stop Recording" : "Start Recording"}
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    {isMicActive ? (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
-                    ) : (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                    )}
-                  </svg>
-                </button>
-              )}
-            </div>
-
-            <div className="flex justify-between items-center px-1">
-              <div className="text-[10px] text-zinc-500 font-medium">
-                {isMicActive ? 'Listening...' : 'Press Enter to transmit'}
+          {/* Composer */}
+          {showComposer && (
+            <div className="animate-fade-in-up z-10 mt-8 w-full max-w-2xl">
+              <div className="glass-panel rounded-2xl p-4">
+                <textarea
+                  className="w-full resize-none bg-transparent p-2 text-body-md leading-relaxed text-on-surface outline-none placeholder:text-on-surface-variant/40"
+                  rows={3}
+                  value={committedText}
+                  placeholder={
+                    phase !== 'listening'
+                      ? 'Waiting for the interviewer…'
+                      : 'Type your response, or use the mic to speak…'
+                  }
+                  onChange={(e) => setCommittedText(e.target.value)}
+                  disabled={phase !== 'listening'}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      submitAnswer();
+                    }
+                  }}
+                />
+                <div className="mt-2 flex items-center justify-between gap-4 border-t border-white/5 pt-3">
+                  <span className="font-display text-label-sm text-on-surface-variant/60">
+                    {isMicActive ? 'Listening…' : 'Press Enter to send'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={submitAnswer}
+                    disabled={phase !== 'listening' || !combinedDraft.trim()}
+                    className="btn-accent flex items-center gap-2 px-5 py-2 font-display text-label-md"
+                  >
+                    <Icon name="send" className="h-4 w-4" />
+                    Send answer
+                  </button>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={submitAnswer}
-                disabled={phase !== 'listening' || !combinedDraft.trim()}
-                className="btn-primary px-6 py-2 text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg shadow-indigo-500/20 disabled:shadow-none disabled:opacity-50"
-              >
-                Transmit
-              </button>
             </div>
+          )}
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

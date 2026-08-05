@@ -28,30 +28,32 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
 
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-zinc-800/60 mt-24">
-      <div className="max-w-6xl mx-auto px-6 py-14 grid grid-cols-2 md:grid-cols-4 gap-10">
+    <footer className="mt-24 border-t border-white/5 bg-surface-container-low/40">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-2 gap-10 px-5 py-14 md:grid-cols-4 md:px-16">
         <div className="col-span-2 md:col-span-1">
-          <div className="flex items-center gap-2.5 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-sky-500 flex items-center justify-center text-xs font-bold text-white">
-              AI
-            </div>
-            <span className="font-semibold tracking-tight text-zinc-100">Interviewly</span>
+          <div className="mb-4 flex items-center gap-2.5">
+            <span className="font-display text-headline-md font-bold tracking-tight text-primary-fixed">
+              Interviewly
+            </span>
           </div>
-          <p className="text-sm text-zinc-500 leading-relaxed max-w-xs">
-            Realistic AI mock interviews that probe, follow up, and grade you like a hiring
-            manager would.
+          <p className="max-w-xs text-body-md leading-relaxed text-on-surface-variant/70">
+            Realistic AI mock interviews that probe, follow up, and grade you like a hiring manager
+            would.
           </p>
         </div>
 
         {COLUMNS.map((col) => (
           <div key={col.title}>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-4">
+            <h3 className="mb-4 font-display text-label-sm uppercase tracking-widest text-on-surface-variant">
               {col.title}
             </h3>
             <ul className="space-y-3">
               {col.links.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-sm text-zinc-500 hover:text-zinc-200 transition-colors">
+                  <Link
+                    href={l.href}
+                    className="text-label-md text-on-surface-variant/70 transition-colors hover:text-primary-fixed"
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -61,8 +63,8 @@ export default function SiteFooter() {
         ))}
       </div>
 
-      <div className="border-t border-zinc-800/60">
-        <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-500">
+      <div className="border-t border-white/5">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-3 px-5 py-6 font-display text-label-sm text-on-surface-variant/60 sm:flex-row md:px-16">
           <span>© {2026} Interviewly. All rights reserved.</span>
           <span>Built for candidates who want the real thing.</span>
         </div>

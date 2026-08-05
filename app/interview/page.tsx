@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import Icon from '../components/Icon';
 import Interview from '../components/Interview';
 import Report from '../components/Report';
 import SetupForm from '../components/SetupForm';
@@ -10,6 +11,22 @@ import type { InterviewConfig, InterviewReport, TurnMessage } from '../lib/types
 type Step = 'setup' | 'preparing' | 'interview' | 'generating' | 'report';
 
 const TURNS_PER_MIN = 0.8;
+
+function Waiting({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-6 py-24 text-center">
+      <div className="relative flex h-24 w-24 items-center justify-center">
+        <div className="pulse-ring absolute inset-0 rounded-full border border-primary-fixed/30" />
+        <div
+          className="pulse-ring absolute inset-0 rounded-full border border-primary-fixed/20"
+          style={{ animationDelay: '-0.5s' }}
+        />
+        <div className="ai-glow h-12 w-12 rounded-full bg-gradient-to-br from-primary-fixed to-surface-tint" />
+      </div>
+      <div className="font-display text-label-md text-primary-fixed">{label}</div>
+    </div>
+  );
+}
 
 export default function InterviewPage() {
   const [step, setStep] = useState<Step>('setup');
@@ -28,7 +45,7 @@ export default function InterviewPage() {
       });
       const data = await res.json();
       const targetTurns = Math.max(3, Math.round(cfg.durationMin * TURNS_PER_MIN));
-      setConfig({ ...cfg, summary: data.summary, targetTurns });
+      setConfig({ ...cfg, summary: data.summary, plan: data.plan, targetTurns });
       setStep('interview');
     } catch (e) {
       setError((e as Error).message);
@@ -60,36 +77,50 @@ export default function InterviewPage() {
     setReport(null);
   };
 
+  // The live session takes over the whole viewport with its own chrome.
+  if (step === 'interview' && config) {
+    return <Interview config={config} onFinish={handleFinish} />;
+  }
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-zinc-800/60 bg-zinc-950/70 backdrop-blur-xl sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto px-6 py-3.5 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-sky-500 flex items-center justify-center text-xs font-bold text-white">
-              AI
-            </div>
-            <span className="font-semibold tracking-tight">Interviewly</span>
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-40 h-16 border-b border-white/10 bg-surface/70 backdrop-blur-xl">
+        <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-5 md:px-6">
+          <Link href="/" className="flex items-center">
+            <span className="font-display text-headline-md font-bold tracking-tight text-primary-fixed">
+              Interviewly
+            </span>
           </Link>
-          <div className="flex items-center gap-5">
-            <Link href="/pricing" className="nav-link hidden sm:inline">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/pricing"
+              className="hidden rounded-md px-3 py-2 font-display text-label-md text-on-surface-variant transition-colors hover:bg-white/5 hover:text-on-surface sm:inline"
+            >
               Pricing
             </Link>
-            <Link href="/" className="nav-link">
-              ← Home
+            <Link
+              href="/"
+              className="flex items-center gap-2 rounded-md px-3 py-2 font-display text-label-md text-on-surface-variant transition-colors hover:bg-white/5 hover:text-on-surface"
+            >
+              <Icon name="arrow-left" className="h-4 w-4" />
+              Home
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-6 py-10">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-10 md:px-6">
         {step === 'setup' && (
           <>
-            <div className="text-center mb-10">
-              <span className="badge mb-4">Step 1 · Configure</span>
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            <div className="mb-10 text-center">
+              <span className="badge mb-5">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary-fixed" />
+                Step 1 · Configure
+              </span>
+              <h1 className="font-display text-headline-lg-mobile text-tertiary md:text-headline-lg">
                 Set up your interview
               </h1>
-              <p className="mt-3 text-zinc-400 max-w-xl mx-auto">
+              <p className="mx-auto mt-3 max-w-xl text-body-lg text-on-surface-variant">
                 Add your resume and target role, pick the focus and rigor, and we&apos;ll run a
                 realistic, graded session.
               </p>
@@ -99,25 +130,21 @@ export default function InterviewPage() {
             </div>
           </>
         )}
-        {step === 'preparing' && (
-          <div className="text-center py-24">
-            <div className="inline-flex items-center gap-3 text-zinc-400">
-              <span className="w-2 h-2 rounded-full bg-violet-400 dot-pulse" />
-              Preparing your interviewer…
-            </div>
+
+        {step === 'preparing' && <Waiting label="Preparing your interviewer…" />}
+        {step === 'generating' && <Waiting label="Generating your report…" />}
+
+        {step === 'report' && report && (
+          <div className="animate-fade-in-up">
+            <Report report={report} onRestart={handleRestart} />
           </div>
         )}
-        {step === 'interview' && config && <Interview config={config} onFinish={handleFinish} />}
-        {step === 'generating' && (
-          <div className="text-center py-24">
-            <div className="inline-flex items-center gap-3 text-zinc-400">
-              <span className="w-2 h-2 rounded-full bg-violet-400 dot-pulse" />
-              Generating your report…
-            </div>
+
+        {error && (
+          <div className="mx-auto mt-6 max-w-2xl rounded-xl border border-error/30 bg-error-container/30 p-4 text-center text-body-md text-error">
+            {error}
           </div>
         )}
-        {step === 'report' && report && <Report report={report} onRestart={handleRestart} />}
-        {error && <div className="mt-6 text-sm text-rose-400 text-center">{error}</div>}
       </main>
     </div>
   );

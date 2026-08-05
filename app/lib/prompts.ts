@@ -1,4 +1,5 @@
-import type { InterviewConfig } from './types';
+import { MAX_AREAS, MIN_AREAS } from './rolePlans';
+import type { InterviewArea, InterviewConfig } from './types';
 
 const DIFFICULTY_BLURB: Record<string, string> = {
   easy: 'Tone: Professional and structured. Focus on assessing foundational competencies. Maintain a calm, neutral corporate demeanor. Acknowledge responses briefly before proceeding.',
@@ -15,6 +16,36 @@ const FOCUS_BLURB: Record<string, string> = {
   mixed:
     "INTERVIEW FOCUS — MIXED: Deliberately alternate between behavioral questions (real past situations via STAR) and technical questions (fundamentals, the candidate's stack, system design, debugging, and trade-offs). Aim for a roughly even balance across the interview, and let the candidate profile and target role steer which technical areas you probe.",
 };
+
+/**
+ * Renders the ordered agenda. Kept out of the main template so the interviewer
+ * prompt stays readable, and so an absent plan simply drops the section.
+ */
+function renderPlanBlock(config: InterviewConfig): string {
+  const areas = config.plan?.areas;
+  if (!areas?.length) return '';
+
+  const turns = config.targetTurns ?? 12;
+  const perArea = Math.max(1, Math.round(turns / areas.length));
+
+  const lines = areas.map((area, i) => {
+    const probes = area.probes?.length
+      ? `\n   Example angles (adapt, never recite): ${area.probes.join(' | ')}`
+      : '';
+    return `${i + 1}. ${area.title} — ${area.focus}${probes}`;
+  });
+
+  return `INTERVIEW AGENDA (${config.plan?.roleFamily}). Work through these areas IN ORDER, roughly ${perArea} question(s) each:
+${lines.join('\n')}
+
+AGENDA RULES:
+- Cover the areas in the order listed. Do not jump ahead or return to a closed area unless an answer demands one clarifying follow-up.
+- The example angles are seeds calibrated to this role — adapt them to what the candidate actually claims, and never read one out verbatim.
+- Never mention the agenda, area names, or question numbers to the candidate. Transition naturally ("Let's move to...").
+- If the candidate has no experience in an area, probe how they would approach it, then move on rather than stalling.
+
+`;
+}
 
 // Keep this prompt BYTE-STABLE across turns so OpenAI automatic prompt caching
 // (>=1024 tokens, 50% discount on prefix) kicks in. No per-turn counters here.
@@ -40,7 +71,7 @@ ${modeLine}${roleLine}Target Interview Length: ${targetTurns ?? 12} turns.
 Candidate Profile Data:
 ${profile}
 
-${jdLine}CRITICAL ENTERPRISE INTERVIEW PROTOCOL:
+${jdLine}${renderPlanBlock(config)}CRITICAL ENTERPRISE INTERVIEW PROTOCOL:
 1. Complete Human Realism: Speak as a senior corporate executive on a voice call. Use concise, highly direct language. NEVER use lists, markdown, bullet points, or robotic phrasing like "As an AI...".
 2. Two Question Banks — draw from them according to the Interview Focus above:
    - BEHAVIORAL: ask for real past situations and force the STAR structure (Situation, Task, Action, Result). If they give a hypothetical when you asked about their experience, redirect: "I need a concrete example from your past, not a hypothetical."
@@ -72,6 +103,42 @@ Role target (if JD provided):
 - Likely interview focus areas: <comma separated>
 
 Keep it tight: 150-250 words total. No pleasantries. No hedging.`;
+}
+
+/**
+ * Asks the model for an ordered, role-specific agenda tailored to this
+ * candidate. The static library in `rolePlans.ts` is the fallback.
+ */
+export function buildPlanPrompt(): string {
+  return `You design the agenda for a live technical/professional interview.
+
+Given a candidate's resume (and optionally a target role and job description), produce the ordered list of competency areas the interviewer should work through.
+
+Return STRICT JSON only (no prose, no markdown fences):
+{
+  "roleFamily": string,   // e.g. "Fullstack Developer", "AI Engineer", "HR Generalist"
+  "areas": [
+    {
+      "key": string,      // short kebab-case slug, e.g. "database"
+      "title": string,    // 1-3 words, shown to the candidate, e.g. "Database"
+      "focus": string,    // one sentence: what to probe in this area
+      "probes": string[]  // 2-3 concrete seed questions grounded in THIS resume
+    }
+  ]
+}
+
+RULES:
+- Between ${MIN_AREAS} and ${MAX_AREAS} areas, ordered from foundational to advanced.
+- Derive the areas from the role and the technologies actually on the resume. A fullstack engineer should get something like programming language, frontend, backend, database, API integration. An AI engineer, an HR generalist, and a business development manager must each get a completely different set.
+- Probes must reference the candidate's real stack, domain, or claims — not generic filler.
+- Titles are candidate-facing: plain, professional, no jargon soup.
+- Output the JSON object and nothing else.`;
+}
+
+/** One-line steer appended per turn so the interviewer stays on the agenda. */
+export function buildAreaSteer(area: InterviewArea, index: number, total: number): string {
+  const probes = area.probes?.length ? ` Seed angles: ${area.probes.join(' | ')}` : '';
+  return `[Interviewer note — not visible to the candidate] You are now on agenda area ${index + 1} of ${total}: "${area.title}". Focus: ${area.focus}${probes} Ask ONE question for this area that builds on what the candidate just said. Do not announce the area.`;
 }
 
 export function buildReportSystemPrompt(): string {

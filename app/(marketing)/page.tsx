@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Icon, { type IconName } from '@/app/components/Icon';
 
 export const metadata: Metadata = {
   title: 'Interviewly — Realistic AI mock interviews',
@@ -7,166 +8,270 @@ export const metadata: Metadata = {
     'Practice with a live AI interviewer tuned to your resume and target role. Technical and behavioral questions, real follow-ups, and a graded report.',
 };
 
-const FEATURES: { title: string; body: string; icon: React.ReactNode }[] = [
+const FEATURES: { title: string; body: string; icon: IconName }[] = [
   {
     title: 'Tuned to your resume',
     body: 'Upload a resume and paste the job description. Every question is grounded in your actual background and the role you want.',
-    icon: (
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m-7 4h8a2 2 0 002-2V8l-5-5H7a2 2 0 00-2 2v12a2 2 0 002 2z" />
-    ),
+    icon: 'doc',
   },
   {
     title: 'Technical + behavioral',
     body: 'Choose Technical, Behavioral, or a Mixed loop. The interviewer probes your stack, system design, and trade-offs — not just "tell me about yourself".',
-    icon: (
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-    ),
+    icon: 'code',
   },
   {
     title: 'Real follow-ups',
     body: 'It builds on your last answer and makes you reason aloud, so memorized or AI-generated answers fall apart — just like a real loop.',
-    icon: (
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 4v-4z" />
-    ),
+    icon: 'chat',
   },
   {
     title: 'Voice-first',
     body: 'Speak your answers and hear the interviewer respond with a natural voice. Practice the way the real conversation actually happens.',
-    icon: (
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M19 11a7 7 0 01-14 0m7 7v4m0-4a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-    ),
+    icon: 'mic',
   },
   {
     title: 'Calibrated rigor',
     body: 'From a warm screener to a FAANG bar-raiser. Pick the pressure and the interviewer scales depth and difficulty to match.',
-    icon: (
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-    ),
+    icon: 'trending',
   },
   {
     title: 'Graded report',
     body: 'Get a structured scorecard — communication, knowledge, problem-solving, role fit — with per-question feedback and concrete next steps.',
-    icon: (
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-    ),
+    icon: 'chart',
   },
 ];
 
+/** Fixed bar heights (%) — deterministic so server and client markup match. */
+const WAVEFORM = [
+  22, 48, 34, 72, 58, 90, 44, 66, 30, 82, 52, 38, 74, 26, 60, 96, 42, 68, 34, 56, 78, 30, 50, 86,
+  40, 62, 28, 70,
+];
+
 const STEPS: { n: string; title: string; body: string }[] = [
-  { n: '01', title: 'Add your context', body: 'Paste or upload your resume, drop in the job description, and pick your role.' },
-  { n: '02', title: 'Set the room', body: 'Choose focus (technical / behavioral / mixed), rigor, duration, and interviewer voice.' },
-  { n: '03', title: 'Interview & review', body: 'Have a live back-and-forth, then get a graded report with specific, honest feedback.' },
+  {
+    n: '01',
+    title: 'Add your context',
+    body: 'Paste or upload your resume, drop in the job description, and pick your role.',
+  },
+  {
+    n: '02',
+    title: 'Set the room',
+    body: 'Choose focus (technical / behavioral / mixed), rigor, duration, and interviewer voice.',
+  },
+  {
+    n: '03',
+    title: 'Interview & review',
+    body: 'Have a live back-and-forth, then get a graded report with specific, honest feedback.',
+  },
 ];
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="relative mx-auto max-w-[1440px] px-5 md:px-16">
+      {/* Ambient background glows */}
+      <div className="pointer-events-none absolute left-1/4 top-20 -z-10 h-96 w-96 rounded-full bg-primary-fixed/5 blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-40 right-1/4 -z-10 h-[500px] w-[500px] rounded-full bg-primary-fixed/5 blur-[150px]" />
+
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 sm:pt-28 text-center">
-        <span className="badge mb-6">Mock interviews · Real prep</span>
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight gradient-hero leading-[1.05] max-w-4xl mx-auto">
-          Interview like it&apos;s real.
-        </h1>
-        <p className="mt-6 text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-          A live AI interviewer tuned to your resume and target role. It probes, follows up, and
-          grades you like a hiring manager would — across technical and behavioral rounds.
-        </p>
-        <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link href="/interview" className="btn-primary btn-lg font-semibold">
-            Start a mock interview
-          </Link>
-          <Link href="/pricing" className="btn-secondary btn-lg font-semibold">
-            See pricing
-          </Link>
+      <section className="relative mb-24 flex min-h-[80vh] flex-col items-center justify-center gap-12 pt-16 md:flex-row md:pt-24">
+        <div className="z-10 flex w-full flex-col items-start md:w-1/2">
+          <div className="badge mb-6">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-primary-fixed" />
+            Mock interviews · Real prep
+          </div>
+
+          <h1 className="mb-6 font-display text-headline-lg-mobile text-tertiary md:text-headline-xl">
+            Interview like <br />
+            it&apos;s <span className="text-glow text-primary-fixed">real</span>.
+          </h1>
+
+          <p className="mb-10 max-w-lg text-body-lg leading-relaxed text-on-surface-variant">
+            A live AI interviewer tuned to your resume and target role. It probes, follows up, and
+            grades you like a hiring manager would — across technical and behavioral rounds.
+          </p>
+
+          <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
+            <Link
+              href="/interview"
+              className="btn-accent px-8 py-4 text-center font-display text-label-md shadow-[0_0_15px_rgba(185,246,0,0.4)]"
+            >
+              Start a mock interview
+            </Link>
+            <Link
+              href="/pricing"
+              className="btn-ghost flex items-center justify-center gap-2 px-8 py-4 text-center font-display text-label-md"
+            >
+              <Icon name="play-circle" />
+              See pricing
+            </Link>
+          </div>
+
+          <p className="mt-5 font-display text-label-sm text-on-surface-variant/60">
+            No credit card required · Free during beta
+          </p>
         </div>
-        <p className="mt-5 text-xs text-zinc-500">No credit card required · Free during beta</p>
 
         {/* Product preview */}
-        <div className="mt-16 max-w-3xl mx-auto text-left">
-          <div className="glass p-5 sm:p-6 shadow-2xl">
-            <div className="flex items-center gap-2 mb-5">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/70" />
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/70" />
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
-              <span className="ml-3 text-[11px] uppercase tracking-widest text-zinc-500">Live session</span>
+        <div className="relative z-10 flex w-full items-center justify-center md:h-[500px] md:w-1/2">
+          <div className="glow-accent relative w-full overflow-hidden rounded-[2rem] border border-white/10 bg-surface-container-high transition-transform duration-500 md:h-full md:-rotate-3 md:scale-95 md:hover:rotate-0 md:hover:scale-100">
+            <div className="tech-grid absolute inset-0 opacity-60" />
+
+            <div className="relative flex h-full flex-col gap-6 p-6 pb-32 pt-16 lg:pt-6">
+              <div className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-error/70" />
+                <span className="h-2.5 w-2.5 rounded-full bg-primary-fixed-dim/70" />
+                <span className="h-2.5 w-2.5 rounded-full bg-outline/70" />
+                <span className="ml-3 font-display text-label-sm uppercase tracking-widest text-on-surface-variant/60">
+                  Live session
+                </span>
+              </div>
+
+              <div className="space-y-5 lg:pr-28">
+                <div className="border-l-2 border-primary-fixed pl-4">
+                  <div className="mb-1 font-display text-label-sm uppercase tracking-widest text-on-surface-variant/60">
+                    Interviewer
+                  </div>
+                  <p className="text-body-md leading-relaxed text-on-surface">
+                    You mentioned you scaled the payments service. What was the bottleneck, and how
+                    did you decide between sharding and a read replica?
+                  </p>
+                </div>
+                <div className="border-l-2 border-outline-variant pl-4">
+                  <div className="mb-1 font-display text-label-sm uppercase tracking-widest text-on-surface-variant/60">
+                    You
+                  </div>
+                  <p className="text-body-md leading-relaxed text-on-surface-variant">
+                    Write latency was the constraint at peak, so I…
+                    <span className="ml-1 inline-block h-4 w-1.5 animate-pulse rounded-sm bg-primary-fixed align-middle" />
+                  </p>
+                </div>
+              </div>
+
+              {/* Voice waveform */}
+              <div
+                className="mt-auto flex h-24 items-center justify-center gap-1.5"
+                aria-hidden="true"
+              >
+                {WAVEFORM.map((h, i) => (
+                  <div
+                    key={i}
+                    className="w-1.5 flex-none animate-pulse rounded-full bg-primary-fixed/40"
+                    style={{
+                      height: `${h}%`,
+                      animationDelay: `${(i % 7) * 120}ms`,
+                      animationDuration: `${1200 + (i % 5) * 260}ms`,
+                    }}
+                  />
+                ))}
+              </div>
             </div>
-            <div className="space-y-4">
-              <div className="border-l-2 border-indigo-500 pl-4">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">Interviewer</div>
-                <p className="text-sm text-zinc-300 leading-relaxed">
-                  You mentioned you scaled the payments service. What was the bottleneck, and how
-                  did you decide between sharding and a read replica?
-                </p>
+
+            {/* Speech analysis overlay */}
+            <div className="glass-panel absolute bottom-6 left-6 right-6 flex items-center gap-4 rounded-xl p-4">
+              <div className="flex h-12 w-12 flex-none items-center justify-center rounded-full bg-primary-fixed shadow-[0_0_20px_rgba(185,246,0,0.35)]">
+                <Icon name="mic" className="h-5 w-5 text-on-primary-fixed" />
               </div>
-              <div className="border-l-2 border-zinc-600 pl-4">
-                <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-1">You</div>
-                <p className="text-sm text-zinc-400 leading-relaxed">
-                  Write latency was the constraint at peak, so I…
-                  <span className="inline-block w-1.5 h-4 ml-1 bg-indigo-400/80 align-middle rounded-sm animate-pulse" />
-                </p>
+              <div className="min-w-0 flex-1">
+                <div className="mb-1.5 font-display text-label-sm text-on-surface-variant">
+                  Analyzing speech pattern…
+                </div>
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container">
+                  <div className="relative h-full w-[78%] bg-primary-fixed">
+                    <div className="absolute inset-0 animate-pulse bg-white/30" />
+                  </div>
+                </div>
               </div>
+              <div className="ml-auto hidden whitespace-nowrap font-display text-label-md text-primary-fixed sm:block">
+                78% Confidence
+              </div>
+            </div>
+          </div>
+
+          {/* Floating card */}
+          <div className="glass-panel absolute -right-6 -top-4 hidden w-48 rounded-xl p-4 shadow-2xl lg:block">
+            <div className="mb-2 flex items-center gap-2">
+              <Icon name="check-circle" className="h-4 w-4 text-primary-fixed" />
+              <span className="font-display text-label-sm text-tertiary">Real-time feedback</span>
+            </div>
+            <div className="text-[10px] leading-relaxed text-on-surface-variant">
+              STAR method detected. Strong structure.
             </div>
           </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="text-center mb-12">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] accent-grad">Why Interviewly</span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-white">
+      <section className="py-16">
+        <div className="mb-12 text-center">
+          <span className="font-display text-label-sm uppercase tracking-[0.2em] text-primary-fixed">
+            Why Interviewly
+          </span>
+          <h2 className="mt-3 font-display text-headline-lg-mobile text-tertiary md:text-headline-lg">
             Prep that behaves like the real thing
           </h2>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f) => (
-            <div key={f.title} className="glass lift p-6">
-              <div className="w-11 h-11 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center mb-4">
-                <svg className="w-5 h-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  {f.icon}
-                </svg>
+            <div
+              key={f.title}
+              className="glass-panel lift rounded-2xl p-6"
+            >
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg border border-primary-fixed/30 bg-primary-fixed/10">
+                <Icon name={f.icon} className="h-5 w-5 text-primary-fixed" />
               </div>
-              <h3 className="font-semibold text-zinc-100 mb-2">{f.title}</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">{f.body}</p>
+              <h3 className="mb-2 font-display text-label-md font-semibold text-on-surface">
+                {f.title}
+              </h3>
+              <p className="text-body-md leading-relaxed text-on-surface-variant">{f.body}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* How it works */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="text-center mb-12">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] accent-grad">How it works</span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-white">
+      <section className="py-16">
+        <div className="mb-12 text-center">
+          <span className="font-display text-label-sm uppercase tracking-[0.2em] text-primary-fixed">
+            How it works
+          </span>
+          <h2 className="mt-3 font-display text-headline-lg-mobile text-tertiary md:text-headline-lg">
             From resume to graded report in minutes
           </h2>
         </div>
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid gap-6 md:grid-cols-3">
           {STEPS.map((s) => (
-            <div key={s.n} className="glass p-6">
-              <div className="text-3xl font-bold accent-grad mb-3">{s.n}</div>
-              <h3 className="font-semibold text-zinc-100 mb-2">{s.title}</h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">{s.body}</p>
+            <div key={s.n} className="glass-panel rounded-2xl p-6">
+              <div className="mb-3 font-display text-headline-md font-bold text-primary-fixed">
+                {s.n}
+              </div>
+              <h3 className="mb-2 font-display text-label-md font-semibold text-on-surface">
+                {s.title}
+              </h3>
+              <p className="text-body-md leading-relaxed text-on-surface-variant">{s.body}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* CTA band */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="glass p-10 sm:p-14 text-center relative overflow-hidden">
+      <section className="py-16">
+        <div className="glass-panel relative overflow-hidden rounded-[2rem] p-10 text-center sm:p-14">
+          <div className="pointer-events-none absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-primary-fixed/10 blur-[100px]" />
           <div className="relative z-10">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            <h2 className="font-display text-headline-lg-mobile text-tertiary md:text-headline-lg">
               Your next interview shouldn&apos;t be your first rep.
             </h2>
-            <p className="mt-4 text-zinc-400 max-w-xl mx-auto">
+            <p className="mx-auto mt-4 max-w-xl text-body-lg text-on-surface-variant">
               Run a realistic loop today and walk in already warmed up.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link href="/interview" className="btn-primary btn-lg font-semibold">
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href="/interview"
+                className="btn-accent neon-glow px-8 py-4 font-display text-label-md"
+              >
                 Start free
               </Link>
-              <Link href="/features" className="btn-secondary btn-lg font-semibold">
+              <Link href="/features" className="btn-ghost px-8 py-4 font-display text-label-md">
                 Explore features
               </Link>
             </div>

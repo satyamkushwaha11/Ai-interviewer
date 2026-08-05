@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import Icon from './Icon';
 
 const NAV = [
   { href: '/features', label: 'Features' },
   { href: '/pricing', label: 'Pricing' },
+  { href: '/interview', label: 'Interview' },
 ];
 
 export default function SiteHeader() {
@@ -14,60 +16,65 @@ export default function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-800/60 bg-zinc-950/70 backdrop-blur-xl">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-sky-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-indigo-500/20">
-            AI
-          </div>
-          <span className="font-semibold tracking-tight text-zinc-100">Interviewly</span>
+    <header className="sticky top-0 z-50 h-16 border-b border-white/10 bg-surface/70 shadow-sm backdrop-blur-xl">
+      <div className="relative mx-auto flex h-full max-w-[1440px] items-center justify-between px-5 md:px-16">
+        {/* Brand */}
+        <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
+          <span className="font-display text-headline-md font-bold tracking-tight text-primary-fixed">
+            Interviewly
+          </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
+        {/* Centred nav */}
+        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex">
           {NAV.map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              className={`nav-link ${pathname === n.href ? 'text-zinc-100' : ''}`}
+              className={`rounded-md px-3 py-2 font-display text-label-md transition-colors hover:bg-white/5 hover:text-on-surface ${
+                pathname === n.href ? 'text-on-surface' : 'text-on-surface-variant'
+              }`}
             >
               {n.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
-          <Link href="/interview" className="nav-link">
+        {/* Actions */}
+        <div className="hidden items-center gap-4 md:flex">
+          <Link
+            href="/interview"
+            className="rounded-md px-3 py-2 font-display text-label-md text-on-surface-variant transition-colors hover:bg-white/5 hover:text-on-surface"
+          >
             Sign in
           </Link>
-          <Link href="/interview" className="btn-primary px-4 py-2 text-sm font-semibold">
+          <Link
+            href="/interview"
+            className="rounded-lg bg-primary-fixed px-4 py-2 font-display text-label-md font-medium text-on-primary-fixed transition-all hover:brightness-110"
+          >
             Start free
           </Link>
         </div>
 
+        {/* Mobile toggle */}
         <button
           type="button"
-          className="md:hidden p-2 -mr-2 text-zinc-300 hover:text-white"
+          className="-mr-2 rounded-full p-2 text-on-surface-variant transition-colors hover:bg-white/5 hover:text-primary-fixed md:hidden"
           aria-label="Toggle menu"
+          aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d={open ? 'M6 18L18 6M6 6l12 12' : 'M4 7h16M4 12h16M4 17h16'}
-            />
-          </svg>
+          <Icon name={open ? 'close' : 'menu'} className="h-6 w-6" />
         </button>
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-zinc-800/60 bg-zinc-950/95 px-6 py-4 space-y-3">
+        <div className="space-y-3 border-t border-white/10 bg-surface-container/95 px-5 py-4 backdrop-blur-xl md:hidden">
           {NAV.map((n) => (
             <Link
               key={n.href}
               href={n.href}
-              className="block nav-link py-1"
+              className="block py-1 font-display text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
               onClick={() => setOpen(false)}
             >
               {n.label}
@@ -75,7 +82,7 @@ export default function SiteHeader() {
           ))}
           <Link
             href="/interview"
-            className="btn-primary w-full block text-center px-4 py-2.5 text-sm font-semibold mt-2"
+            className="mt-2 block w-full rounded-lg bg-primary-fixed px-4 py-2.5 text-center font-display text-label-md font-medium text-on-primary-fixed"
             onClick={() => setOpen(false)}
           >
             Start free
