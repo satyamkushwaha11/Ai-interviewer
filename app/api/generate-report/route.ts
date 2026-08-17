@@ -1,6 +1,12 @@
+import { after } from 'next/server';
 import { getAIProvider } from '@/app/lib/ai';
+import { errorResponse, handleRouteError, tooManyRequests } from '@/app/lib/apiError';
+import { getSessionForTurn, isUuid, saveReport } from '@/app/lib/db';
+import { hit } from '@/app/lib/rateLimit';
+import { requireUser } from '@/app/lib/requireUser';
 import { buildReportSystemPrompt } from '@/app/lib/prompts';
-import type { InterviewConfig, InterviewReport, TurnMessage } from '@/app/lib/types';
+import { parseHistory, readJson } from '@/app/lib/validate';
+import type { InterviewReport, TurnMessage } from '@/app/lib/types';
 
 export const runtime = 'nodejs';
 
@@ -29,14 +35,55 @@ function stubReport(history: TurnMessage[]): InterviewReport {
   };
 }
 
+/** Store the graded report after the response is sent; never blocks or fails the grade. */
+function persistReport(sessionId: string, history: TurnMessage[], report: InterviewReport) {
+  after(async () => {
+    try {
+      await saveReport(sessionId, history, report);
+    } catch (err) {
+      console.error('[generate-report] failed to save report:', err);
+    }
+  });
+}
+
+/** Grade a finished interview. Body: `{ sessionId, history }`; config comes from the session row. */
 export async function POST(request: Request) {
-  const { config, history } = (await request.json()) as {
-    config: InterviewConfig;
-    history: TurnMessage[];
-  };
+  const auth = await requireUser();
+  if (auth instanceof Response) return auth;
+
+  const limit = hit(`report:${auth.id}`, 10, 10 * 60_000);
+  if (!limit.ok) return tooManyRequests(limit.retryAfterSec);
+
+  const body = (await readJson(request)) as { sessionId?: unknown; history?: unknown } | null;
+  if (!body) return errorResponse('bad_request', 'Malformed request body', 'The grading request was malformed.');
+
+  const parsedHistory = parseHistory(body.history);
+  if (!parsedHistory.ok) return errorResponse('bad_request', 'invalid history', 'The grading request was malformed.');
+  const history = parsedHistory.value;
+  if (!history.some((m) => m.role === 'candidate')) {
+    return errorResponse('bad_request', 'no answers', 'Nothing to grade — you have not answered any questions yet.');
+  }
+
+  const { sessionId } = body;
+  if (!isUuid(sessionId)) return errorResponse('bad_request', 'unknown session', 'This interview session is not valid.');
+
+  let session: Awaited<ReturnType<typeof getSessionForTurn>>;
+  try {
+    session = await getSessionForTurn(auth.id, sessionId);
+  } catch (err) {
+    return handleRouteError('generate-report:session', err);
+  }
+  if (!session) return errorResponse('bad_request', 'unknown session', 'This interview session is not valid.');
+  const { config } = session;
 
   const ai = getAIProvider();
-  if (!ai) return Response.json({ report: stubReport(history) });
+  if (!ai) {
+    return Response.json({
+      report: stubReport(history),
+      degraded: true,
+      notice: 'No AI provider configured — showing a placeholder report, not a real grade.',
+    });
+  }
 
   const transcript = history
     .map((m) => `${m.role === 'interviewer' ? 'Interviewer' : 'Candidate'}: ${m.content}`)
@@ -52,13 +99,12 @@ export async function POST(request: Request) {
           { role: 'system', content: buildReportSystemPrompt() },
           { role: 'user', content: contextBlock },
         ],
-        { temperature: 0.2, maxTokens: 2500, json: true }
+        { temperature: 0.2, maxTokens: 2500, json: true },
       )) || '{}';
   } catch (err) {
-    console.error('generate-report failed:', err);
-    const report = stubReport(history);
-    report.summary = 'Report generation failed — showing stub.';
-    return Response.json({ report });
+    // Don't dress a failure up as a 7/10 grade — surface it so the candidate
+    // can retry against the transcript they just earned.
+    return handleRouteError('generate-report', err);
   }
 
   // Models sometimes wrap JSON in ```json fences despite instructions.
@@ -68,16 +114,15 @@ export async function POST(request: Request) {
   try {
     report = JSON.parse(cleaned) as InterviewReport;
   } catch {
-    report = stubReport(history);
-    report.summary = 'Report parse failed — showing stub.';
+    console.error('[generate-report] unparseable model output:', cleaned.slice(0, 300));
+    return errorResponse('parse_failed', 'malformed JSON', 'The grader returned an unreadable response. Try again.');
   }
+
+  if (typeof report?.overall !== 'number' || !Array.isArray(report?.perQuestion)) {
+    console.error('[generate-report] unexpected report shape:', cleaned.slice(0, 300));
+    return errorResponse('parse_failed', 'unexpected shape', 'The grader returned an incomplete report. Try again.');
+  }
+
+  persistReport(sessionId, history, report);
   return Response.json({ report });
 }
-
-
-
-
-
-
-
-

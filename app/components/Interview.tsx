@@ -2,21 +2,73 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from './Icon';
+import { useToast } from './Toast';
 import { loadVoices, pickVoice, pitchFor } from '@/app/lib/browserVoice';
+import { fetchJson, toUserMessage } from '@/app/lib/fetchJson';
 import type { InterviewConfig, TurnMessage } from '@/app/lib/types';
 
 interface Props {
   config: InterviewConfig;
+  /** The session row created by POST /api/sessions; every turn is checked against it. */
+  sessionId: string;
   onFinish: (history: TurnMessage[]) => void;
 }
 
-type Phase = 'loading' | 'speaking' | 'listening' | 'thinking' | 'done';
+/** How long to wait on the model before offering a retry. */
+const TURN_TIMEOUT_MS = 75_000;
+/** Hosted TTS is a nicety; fall back to the browser voice quickly if it stalls. */
+const TTS_TIMEOUT_MS = 20_000;
+
+type Phase = 'loading' | 'speaking' | 'listening' | 'thinking' | 'done' | 'error';
 
 interface AudioGraph {
   ctx: AudioContext;
   analyser: AnalyserNode;
   buffer: Uint8Array<ArrayBuffer>;
 }
+
+/** The slice of the Web Speech `SpeechRecognition` interface this component drives. */
+interface Recognition {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onerror: ((e: { error?: string }) => void) | null;
+  onstart: (() => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
+/**
+ * Recognition errors after which auto-restarting is pointless: the next
+ * start() would fail the same way. Everything else ('no-speech', 'aborted')
+ * is routine and `onend` simply restarts.
+ */
+const TERMINAL_MIC_ERRORS: Record<string, { title: string; message: string }> = {
+  'not-allowed': {
+    title: 'Microphone blocked',
+    message:
+      'Microphone access is blocked. Allow it in your browser settings, or type your answer below.',
+  },
+  'service-not-allowed': {
+    title: 'Microphone blocked',
+    message:
+      'Microphone access is blocked. Allow it in your browser settings, or type your answer below.',
+  },
+  'audio-capture': {
+    title: 'No microphone',
+    message: 'No microphone was found. Type your answer below instead.',
+  },
+  // Browsers whose speech service is disabled (Brave, unbranded Chromium,
+  // Opera) fail like this on every start; retrying would spin
+  // start→error→end forever with the mic looking live and nothing transcribed.
+  network: {
+    title: 'Speech recognition unavailable',
+    message:
+      'Speech recognition could not reach its service — some browsers (e.g. Brave) block it. Tap the mic to retry, use Chrome, or type your answer below.',
+  },
+};
 
 /** Resting heights (px) for the orb's equaliser bars. */
 const ORB_BARS = [26, 44, 34, 56, 38, 48, 28];
@@ -36,7 +88,7 @@ function formatClock(seconds: number) {
   return `${m}:${s}`;
 }
 
-export default function Interview({ config, onFinish }: Props) {
+export default function Interview({ config, sessionId, onFinish }: Props) {
   const [history, setHistory] = useState<TurnMessage[]>([]);
   const [phase, setPhase] = useState<Phase>('loading');
   const [currentQuestion, setCurrentQuestion] = useState('');
@@ -46,13 +98,16 @@ export default function Interview({ config, onFinish }: Props) {
   const [interimText, setInterimText] = useState('');
   const [sttSupported, setSttSupported] = useState(true);
   const [isMicActive, setIsMicActive] = useState(false);
+  const [micError, setMicError] = useState('');
+  const [turnError, setTurnError] = useState('');
+  const { error: toastError, warning: toastWarning, info: toastInfo } = useToast();
 
   // UI State
   const [typing, setTyping] = useState(false);
   const [transcriptOpen, setTranscriptOpen] = useState(false);
   const [elapsed, setElapsed] = useState(0);
 
-  const recognitionRef = useRef<unknown>(null);
+  const recognitionRef = useRef<Recognition | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioGraphRef = useRef<AudioGraph | null>(null);
   const amplitudeRef = useRef(0);
@@ -65,13 +120,30 @@ export default function Interview({ config, onFinish }: Props) {
 
   const initialFetchDone = useRef(false);
   const shouldListenRef = useRef(false);
+  const restartTimerRef = useRef<number | null>(null);
+  // The browser-speech notice is worth saying once per session, not per turn.
+  const ttsNoticeShown = useRef(false);
+  // Once hosted TTS has failed (not configured, gateway without audio, or a
+  // timeout) stop trying: every later question would otherwise wait out the
+  // same failure before the browser voice took over.
+  const hostedTtsUnavailable = useRef(false);
+  const voiceNoticeOnce = useCallback(
+    (message: string, title: string) => {
+      if (ttsNoticeShown.current) return;
+      ttsNoticeShown.current = true;
+      toastInfo(message, { title });
+    },
+    [toastInfo],
+  );
   // Mirrors of the draft so recognition callbacks and submit read the same
   // values without depending on render closures.
   const committedRef = useRef('');
   const interimRef = useRef('');
-  // Set while an answer is being submitted so a late `onend` cannot push the
-  // just-sent text back into the next answer.
-  const suppressCommitRef = useRef(false);
+  // Set when an answer is submitted. Chrome finalises the pending interim
+  // result *after* stop() (a late `onresult`, then `onend`); both must be
+  // ignored or the just-sent text reappears as the draft of the next answer.
+  // Cleared by the next `onstart`, i.e. once a fresh session owns the events.
+  const discardUntilStartRef = useRef(false);
 
   useEffect(() => { committedRef.current = committedText; }, [committedText]);
   useEffect(() => { interimRef.current = interimText; }, [interimText]);
@@ -81,6 +153,17 @@ export default function Interview({ config, onFinish }: Props) {
     const id = setInterval(() => setElapsed((e) => e + 1), 1000);
     return () => clearInterval(id);
   }, []);
+
+  // A reload or closed tab mid-interview loses the session; make the browser
+  // ask first once there is something to lose.
+  useEffect(() => {
+    if (phase === 'done' || history.length < 2) return;
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [phase, history.length]);
 
   // Auto-scroll to bottom of transcript
   useEffect(() => {
@@ -133,12 +216,14 @@ export default function Interview({ config, onFinish }: Props) {
     async (text: string) => {
       setPhase('speaking');
       try {
+        if (hostedTtsUnavailable.current) throw new Error('hosted TTS disabled for this session');
         const res = await fetch('/api/tts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text, gender: config.gender, difficulty: config.difficulty }),
+          signal: AbortSignal.timeout(TTS_TIMEOUT_MS),
         });
-        if (!res.ok) throw new Error('TTS failed');
+        if (!res.ok) throw new Error(`TTS failed (${res.status})`);
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         const audio = new Audio(url);
@@ -164,7 +249,14 @@ export default function Interview({ config, onFinish }: Props) {
       } catch {
         // Fallback to browser TTS if the API is unavailable (e.g. an
         // OpenAI-compatible gateway with no audio/speech endpoint).
-        if (!('speechSynthesis' in window)) return;
+        hostedTtsUnavailable.current = true;
+        if (!('speechSynthesis' in window)) {
+          voiceNoticeOnce(
+            'This browser has no speech output — questions are text only.',
+            'Voice unavailable',
+          );
+          return;
+        }
         const voices = await loadVoices();
         const voice = pickVoice(voices, config.gender);
 
@@ -219,10 +311,29 @@ export default function Interview({ config, onFinish }: Props) {
 
           utterance.onstart = () => {
             started = true;
+            // Only worth saying once we know the browser voice actually works.
+            voiceNoticeOnce(
+              "Using your browser's built-in voice — the hosted voice is unavailable.",
+              'Voice fallback',
+            );
+            // The orb reads amplitudeRef through this loop; without it the
+            // fake sync below animates nothing.
+            startAmplitudeLoop();
             fakeSyncLoop();
           };
           utterance.onend = finish;
-          utterance.onerror = finish;
+          utterance.onerror = (e) => {
+            // Chrome on Linux without a speech engine fails instantly with
+            // 'synthesis-failed'; the question is then never spoken. Tell the
+            // candidate to read it rather than leaving them waiting for audio.
+            if (e.error !== 'interrupted' && e.error !== 'canceled') {
+              voiceNoticeOnce(
+                'Your browser could not play the interviewer’s voice — read each question on screen and answer as usual.',
+                'Voice unavailable',
+              );
+            }
+            finish();
+          };
 
           // A throw here would reject playTts and strand the turn on "speaking",
           // leaving the candidate with a disabled mic and no way to answer.
@@ -234,18 +345,36 @@ export default function Interview({ config, onFinish }: Props) {
         });
       }
     },
-    [config.gender, config.difficulty],
+    [config.gender, config.difficulty, voiceNoticeOnce],
   );
 
   const fetchNext = useCallback(
     async (updated: TurnMessage[]) => {
       setPhase('thinking');
-      const res = await fetch('/api/interview-turn', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ config, history: updated }),
-      });
-      const data = (await res.json()) as { question: string; done: boolean };
+      setTurnError('');
+
+      let data: { question: string; done: boolean; degraded?: boolean; notice?: string };
+      try {
+        data = await fetchJson<typeof data>('/api/interview-turn', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId, history: updated }),
+          signal: AbortSignal.timeout(TURN_TIMEOUT_MS),
+        });
+      } catch (err) {
+        // Park in a recoverable state: the answer stays in history so a retry
+        // continues the interview instead of restarting it.
+        const message = toUserMessage(err);
+        setTurnError(message);
+        setPhase('error');
+        toastError(message, { title: 'Could not get the next question', key: 'turn' });
+        return;
+      }
+
+      if (data.degraded && data.notice) {
+        toastWarning(data.notice, { title: 'Running in fallback mode', key: 'turn-degraded' });
+      }
+
       const nextHistory = [
         ...updated,
         { role: 'interviewer' as const, content: data.question },
@@ -265,11 +394,49 @@ export default function Interview({ config, onFinish }: Props) {
         setPhase('listening');
       }
     },
-    [config, onFinish, playTts],
+    [sessionId, onFinish, playTts, toastError, toastWarning],
   );
 
+  const clearRestartTimer = useCallback(() => {
+    if (restartTimerRef.current !== null) clearTimeout(restartTimerRef.current);
+    restartTimerRef.current = null;
+  }, []);
+
+  /**
+   * Chrome throws InvalidStateError when the previous session has not finished
+   * tearing down. Swallowing that throw silently kills the microphone for the
+   * rest of the turn, so back off and try again a few times.
+   */
+  const startWithRetry = useCallback(() => {
+    clearRestartTimer();
+    let attempt = 0;
+    const tryStart = () => {
+      restartTimerRef.current = null;
+      if (!shouldListenRef.current) return;
+      try {
+        recognitionRef.current?.start();
+      } catch {
+        attempt += 1;
+        if (attempt <= 4) restartTimerRef.current = window.setTimeout(tryStart, 400 * attempt);
+      }
+    };
+    tryStart();
+  }, [clearRestartTimer]);
+
+  const startListening = useCallback(() => {
+    shouldListenRef.current = true;
+    startWithRetry();
+  }, [startWithRetry]);
+
+  const stopListening = useCallback(() => {
+    shouldListenRef.current = false;
+    clearRestartTimer();
+    try {
+      recognitionRef.current?.stop();
+    } catch {}
+  }, [clearRestartTimer]);
+
   useEffect(() => {
-    if (typeof window === 'undefined') return;
     const SR =
       (window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown })
         .SpeechRecognition ??
@@ -278,47 +445,49 @@ export default function Interview({ config, onFinish }: Props) {
       setTimeout(() => setSttSupported(false), 0);
       return;
     }
-    const rec = new (SR as new () => unknown)() as {
-      continuous: boolean;
-      interimResults: boolean;
-      lang: string;
-      onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
-      onerror: (() => void) | null;
-      onstart: (() => void) | null;
-      onend: (() => void) | null;
-      start: () => void;
-      stop: () => void;
-    };
+    const rec = new (SR as new () => Recognition)();
     rec.continuous = true;
     rec.interimResults = true;
-    rec.lang = 'en-US';
+    // The recogniser is markedly better with the speaker's own English variant
+    // (en-IN, en-GB, …) than with a hard-coded en-US.
+    rec.lang = /^en(-|$)/i.test(navigator.language) ? navigator.language : 'en-US';
+    recognitionRef.current = rec;
 
-    rec.onstart = () => setIsMicActive(true);
+    rec.onstart = () => {
+      discardUntilStartRef.current = false;
+      setIsMicActive(true);
+      setMicError('');
+    };
+
     rec.onend = () => {
       setIsMicActive(false);
 
-      // The answer has already been sent — do not resurrect its text.
-      if (suppressCommitRef.current) return;
-
-      // When the session ends natively, commit the interim text.
-      const interim = interimRef.current;
-      if (interim) {
+      // Commit whatever was heard (see discardUntilStartRef).
+      if (!discardUntilStartRef.current && interimRef.current) {
         const committed = committedRef.current;
-        const merged = committed + (committed ? ' ' : '') + interim;
+        const merged = committed + (committed ? ' ' : '') + interimRef.current;
         committedRef.current = merged;
         interimRef.current = '';
         setCommittedText(merged);
         setInterimText('');
       }
 
-      if (shouldListenRef.current) {
-        try {
-          rec.start();
-        } catch {}
-      }
+      // Chrome ends the session on its own after a silence. The restart must
+      // happen regardless of the commit guard above, or the mic dies for the
+      // rest of the turn and the candidate talks into a dead microphone.
+      if (shouldListenRef.current) startWithRetry();
+    };
+
+    rec.onerror = (event) => {
+      const terminal = TERMINAL_MIC_ERRORS[event?.error ?? ''];
+      if (!terminal) return;
+      shouldListenRef.current = false;
+      setMicError(terminal.message);
+      toastError(terminal.message, { title: terminal.title, key: 'mic' });
     };
 
     rec.onresult = (event) => {
+      if (discardUntilStartRef.current) return;
       let sessionText = '';
       for (let i = 0; i < event.results.length; i++) {
         sessionText += event.results[i][0].transcript;
@@ -326,19 +495,24 @@ export default function Interview({ config, onFinish }: Props) {
       interimRef.current = sessionText;
       setInterimText(sessionText);
     };
-    rec.onerror = () => {};
-    recognitionRef.current = rec;
-    // Built once: the handlers read refs, so they never need rebinding.
-  }, []);
+
+    // Deps are all identity-stable, so this runs once; the teardown makes a
+    // re-run (Fast Refresh) safe instead of leaving a live orphan session.
+    return () => {
+      rec.onstart = rec.onend = rec.onerror = rec.onresult = null;
+      try {
+        rec.stop();
+      } catch {}
+      if (recognitionRef.current === rec) recognitionRef.current = null;
+    };
+  }, [startWithRetry, toastError]);
 
   useEffect(() => {
     if (initialFetchDone.current) return;
     initialFetchDone.current = true;
     fetchNext([]);
     return () => {
-      try {
-        (recognitionRef.current as { stop?: () => void } | null)?.stop?.();
-      } catch {}
+      stopListening();
       audioRef.current?.pause();
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
@@ -349,27 +523,13 @@ export default function Interview({ config, onFinish }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const startListening = () => {
-    shouldListenRef.current = true;
-    try {
-      (recognitionRef.current as { start: () => void } | null)?.start();
-    } catch {}
-  };
-
-  const stopListening = () => {
-    shouldListenRef.current = false;
-    try {
-      (recognitionRef.current as { stop: () => void } | null)?.stop();
-    } catch {}
-  };
-
   // Voice-first: open the mic as soon as the interviewer stops talking, and
   // close it while they are speaking or thinking.
   useEffect(() => {
     if (!sttSupported) return;
     if (phase === 'listening') startListening();
     else stopListening();
-  }, [phase, sttSupported]);
+  }, [phase, sttSupported, startListening, stopListening]);
 
   const submitAnswer = async () => {
     const committed = committedRef.current;
@@ -377,7 +537,8 @@ export default function Interview({ config, onFinish }: Props) {
     const finalAnswer = (committed + (committed && interim ? ' ' : '') + interim).trim();
     if (!finalAnswer) return;
 
-    suppressCommitRef.current = true;
+    // Must precede stop(): the session's late events belong to this answer.
+    discardUntilStartRef.current = true;
     stopListening();
 
     committedRef.current = '';
@@ -390,11 +551,7 @@ export default function Interview({ config, onFinish }: Props) {
       { role: 'candidate', content: finalAnswer },
     ];
     setHistory(updated);
-    try {
-      await fetchNext(updated);
-    } finally {
-      suppressCommitRef.current = false;
-    }
+    await fetchNext(updated);
   };
 
   /** Cut the interviewer off; playTts resolves and the turn advances to listening. */
@@ -420,8 +577,17 @@ export default function Interview({ config, onFinish }: Props) {
       submitAnswer();
       return;
     }
-    if (isMicActive) stopListening();
-    else startListening();
+    if (isMicActive) {
+      stopListening();
+      // The candidate usually taps here expecting to send. Say plainly that
+      // nothing was transcribed rather than silently switching the mic off.
+      toastInfo(
+        'Nothing was transcribed yet. Tap the mic to listen again, or type your answer.',
+        { title: 'Nothing heard', key: 'mic-empty' },
+      );
+    } else {
+      startListening();
+    }
   };
 
   const repeatQuestion = async () => {
@@ -432,6 +598,14 @@ export default function Interview({ config, onFinish }: Props) {
   };
 
   const endEarly = () => {
+    const answered = historyRef.current.some((m) => m.role === 'candidate');
+    if (
+      answered &&
+      phase !== 'done' &&
+      !window.confirm('End the interview now? You will be graded on the answers given so far.')
+    ) {
+      return;
+    }
     stopListening();
     audioRef.current?.pause();
     if ('speechSynthesis' in window) {
@@ -440,12 +614,18 @@ export default function Interview({ config, onFinish }: Props) {
     onFinish(historyRef.current);
   };
 
+  /** Re-request the turn that failed, keeping the transcript intact. */
+  const retryTurn = () => {
+    fetchNext(historyRef.current);
+  };
+
   const phaseLabel = {
     loading: 'Initializing session',
     thinking: 'Analyzing your answer',
     speaking: 'Interviewer speaking',
     listening: 'Listening…',
     done: 'Session complete',
+    error: 'Connection problem',
   }[phase];
 
   const combinedDraft = committedText + (committedText && interimText ? ' ' : '') + interimText;
@@ -455,9 +635,16 @@ export default function Interview({ config, onFinish }: Props) {
 
   // The rail mirrors the agenda the interviewer is actually working through,
   // using the same even split as the server (see currentAreaIndex).
-  const stages =
-    config.plan?.areas.map((a) => ({ key: a.key, title: a.title, hint: a.focus })) ??
-    FALLBACK_STAGES;
+  // Don't trust the payload's shape: a malformed plan should degrade to the
+  // generic rail, not crash the live session mid-interview.
+  const planAreas = Array.isArray(config.plan?.areas) ? config.plan.areas : [];
+  const stages = planAreas.length
+    ? planAreas.map((a, i) => ({
+        key: a?.key || `area-${i}`,
+        title: a?.title || `Section ${i + 1}`,
+        hint: a?.focus || '',
+      }))
+    : FALLBACK_STAGES;
   const answered = Math.max(0, asked - 1);
   const stageIndex =
     phase === 'done'
@@ -596,7 +783,7 @@ export default function Interview({ config, onFinish }: Props) {
             <Icon name="close" />
           </button>
           <span className="font-display text-headline-md font-bold tracking-tight text-primary-fixed">
-            Interviewly
+            AI Interviewer
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -712,6 +899,33 @@ export default function Interview({ config, onFinish }: Props) {
             </div>
           </div>
 
+          {/* Turn failed — recoverable, transcript intact */}
+          {phase === 'error' && (
+            <div className="animate-fade-in-up z-10 mb-8 w-full max-w-xl rounded-2xl border border-error/30 bg-error-container/25 p-5 text-center">
+              <p className="font-display text-label-md text-error">{turnError}</p>
+              <p className="mt-1 text-body-md text-on-surface-variant">
+                Your answers are safe — retry to continue from here.
+              </p>
+              <div className="mt-4 flex flex-col justify-center gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={retryTurn}
+                  className="btn-accent flex items-center justify-center gap-2 px-5 py-2.5 font-display text-label-md"
+                >
+                  <Icon name="replay" className="h-4 w-4" />
+                  Retry
+                </button>
+                <button
+                  type="button"
+                  onClick={endEarly}
+                  className="btn-ghost px-5 py-2.5 font-display text-label-md"
+                >
+                  End &amp; grade what I have
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Controls */}
           <div className="z-10 flex flex-col items-center gap-6">
             <p
@@ -765,15 +979,21 @@ export default function Interview({ config, onFinish }: Props) {
               </button>
             </div>
 
-            <p className="max-w-md text-center font-display text-label-sm text-on-surface-variant/60">
-              {!sttSupported
-                ? 'Speech recognition isn’t supported in this browser — type your answer below.'
-                : isMicActive
-                  ? 'Speak your answer, then tap the mic again to send it.'
-                  : phase === 'listening'
-                    ? 'Tap the mic to answer, or use the keyboard to type.'
-                    : ''}
-            </p>
+            {micError ? (
+              <p className="flex max-w-md items-start gap-2 rounded-xl border border-error/30 bg-error-container/30 px-4 py-3 text-center font-display text-label-sm text-error">
+                {micError}
+              </p>
+            ) : (
+              <p className="max-w-md text-center font-display text-label-sm text-on-surface-variant/60">
+                {!sttSupported
+                  ? 'Speech recognition isn’t supported in this browser — type your answer below.'
+                  : isMicActive
+                    ? 'Speak your answer, then tap the mic again to send it.'
+                    : phase === 'listening'
+                      ? 'Tap the mic to answer, or use the keyboard to type.'
+                      : ''}
+              </p>
+            )}
           </div>
 
           {/* Live spoken draft — the send affordance for voice answers */}

@@ -1,11 +1,15 @@
 'use client';
 
+import Link from 'next/link';
 import Icon from './Icon';
 import type { InterviewReport, ReportSection } from '@/app/lib/types';
 
 interface Props {
   report: InterviewReport;
-  onRestart: () => void;
+  /** Fresh interview in place (live flow). When absent, a link to /interview is shown instead. */
+  onRestart?: () => void;
+  /** Where "past reports" lives, if the caller wants that link shown. */
+  historyHref?: string;
 }
 
 const RING_PATH =
@@ -60,7 +64,20 @@ function OverallRing({ score }: { score: number }) {
   );
 }
 
-export default function Report({ report, onRestart }: Props) {
+/** Report JSON comes from a model; render defensively so one missing field cannot blank the page. */
+function list(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : [];
+}
+
+const EMPTY_SECTION: ReportSection = { score: 0, notes: '' };
+
+export default function Report({ report, onRestart, historyHref }: Props) {
+  const strengths = list(report.strengths);
+  const improvements = list(report.improvements);
+  const perQuestion = Array.isArray(report.perQuestion) ? report.perQuestion : [];
+  const restartClass =
+    'btn-accent neon-glow shimmer relative flex w-full items-center justify-center gap-2 overflow-hidden py-4 font-display text-label-md';
+
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6">
       {/* Overall */}
@@ -80,10 +97,10 @@ export default function Report({ report, onRestart }: Props) {
 
       {/* Dimension scores */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <ScoreCard label="Communication" section={report.communication} />
-        <ScoreCard label="Knowledge" section={report.knowledge} />
-        <ScoreCard label="Problem solving" section={report.problemSolving} />
-        <ScoreCard label="Role fit" section={report.roleFit} />
+        <ScoreCard label="Communication" section={report.communication ?? EMPTY_SECTION} />
+        <ScoreCard label="Knowledge" section={report.knowledge ?? EMPTY_SECTION} />
+        <ScoreCard label="Problem solving" section={report.problemSolving ?? EMPTY_SECTION} />
+        <ScoreCard label="Role fit" section={report.roleFit ?? EMPTY_SECTION} />
       </div>
 
       {/* Strengths / improvements */}
@@ -94,7 +111,7 @@ export default function Report({ report, onRestart }: Props) {
             Strengths
           </h3>
           <ul className="space-y-3 text-body-md text-on-surface">
-            {report.strengths.map((s, i) => (
+            {strengths.map((s, i) => (
               <li key={i} className="flex gap-3 leading-relaxed">
                 <Icon name="check" className="mt-1 h-4 w-4 flex-none text-primary-fixed" />
                 {s}
@@ -108,7 +125,7 @@ export default function Report({ report, onRestart }: Props) {
             Improvements
           </h3>
           <ul className="space-y-3 text-body-md text-on-surface">
-            {report.improvements.map((s, i) => (
+            {improvements.map((s, i) => (
               <li key={i} className="flex gap-3 leading-relaxed">
                 <Icon
                   name="arrow-right"
@@ -127,7 +144,7 @@ export default function Report({ report, onRestart }: Props) {
           Per-question feedback
         </h3>
         <div className="space-y-4">
-          {report.perQuestion.map((q, i) => (
+          {perQuestion.map((q, i) => (
             <div key={i} className="glass-card p-6">
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div className="font-display text-label-md leading-relaxed text-on-surface">
@@ -156,16 +173,32 @@ export default function Report({ report, onRestart }: Props) {
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={onRestart}
-        className="btn-accent neon-glow shimmer relative w-full overflow-hidden py-4 font-display text-label-md"
-      >
-        <span className="relative z-10 flex items-center justify-center gap-2">
-          <Icon name="replay" className="h-5 w-5" />
-          Start a new interview
-        </span>
-      </button>
+      <div className="flex flex-col gap-3">
+        {onRestart ? (
+          <button type="button" onClick={onRestart} className={restartClass}>
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              <Icon name="replay" className="h-5 w-5" />
+              Start a new interview
+            </span>
+          </button>
+        ) : (
+          <Link href="/interview" className={restartClass}>
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              <Icon name="replay" className="h-5 w-5" />
+              Start a new interview
+            </span>
+          </Link>
+        )}
+        {historyHref && (
+          <Link
+            href={historyHref}
+            className="btn-ghost flex w-full items-center justify-center gap-2 py-3 font-display text-label-md"
+          >
+            <Icon name="chart" className="h-4 w-4" />
+            View past reports
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

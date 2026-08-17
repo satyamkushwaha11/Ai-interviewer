@@ -23,7 +23,7 @@ const FOCUS_BLURB: Record<string, string> = {
  */
 function renderPlanBlock(config: InterviewConfig): string {
   const areas = config.plan?.areas;
-  if (!areas?.length) return '';
+  if (!Array.isArray(areas) || areas.length === 0) return '';
 
   const turns = config.targetTurns ?? 12;
   const perArea = Math.max(1, Math.round(turns / areas.length));

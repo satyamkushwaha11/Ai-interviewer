@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Icon, { type IconName } from '@/app/components/Icon';
 
 export const metadata: Metadata = {
-  title: 'Interviewly — Realistic AI mock interviews',
+  title: 'AI Interviewer — Realistic mock interviews',
   description:
     'Practice with a live AI interviewer tuned to your resume and target role. Technical and behavioral questions, real follow-ups, and a graded report.',
 };
@@ -204,7 +204,7 @@ export default function HomePage() {
       <section className="py-16">
         <div className="mb-12 text-center">
           <span className="font-display text-label-sm uppercase tracking-[0.2em] text-primary-fixed">
-            Why Interviewly
+            Why AI Interviewer
           </span>
           <h2 className="mt-3 font-display text-headline-lg-mobile text-tertiary md:text-headline-lg">
             Prep that behaves like the real thing

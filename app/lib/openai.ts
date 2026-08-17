@@ -14,6 +14,10 @@ export function getOpenAI(): OpenAI | null {
     client = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
       ...(OPENAI_BASE_URL ? { baseURL: OPENAI_BASE_URL } : {}),
+      // The SDK default is 10 minutes; a live interview cannot wait that long.
+      // A hung request surfaces as a retryable error on the candidate's screen.
+      timeout: 60_000,
+      maxRetries: 1,
     });
   }
   return client;

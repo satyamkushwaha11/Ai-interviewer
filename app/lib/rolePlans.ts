@@ -1242,11 +1242,6 @@ export function detectRolePlan(input: {
   return PLANS[best?.key ?? 'generic'];
 }
 
-/** Every plan in the library, for docs/tests. */
-export function allRolePlans(): InterviewPlan[] {
-  return Object.values(PLANS);
-}
-
 function cleanString(value: unknown, max: number): string {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }

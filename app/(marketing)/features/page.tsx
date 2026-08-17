@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Icon, { type IconName } from '@/app/components/Icon';
 
 export const metadata: Metadata = {
-  title: 'Features — Interviewly',
+  title: 'Features — AI Interviewer',
   description:
     'Resume-tuned questions, technical and behavioral focus modes, real follow-ups, a voice interviewer, and a graded report.',
 };
@@ -57,7 +57,7 @@ export default function FeaturesPage() {
           Everything you need to walk in ready
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-body-lg text-on-surface-variant">
-          Interviewly recreates the real loop end to end — from the first question to the final
+          AI Interviewer recreates the real loop end to end — from the first question to the final
           scorecard.
         </p>
       </div>

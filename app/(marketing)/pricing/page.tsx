@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Icon from '@/app/components/Icon';
 
 export const metadata: Metadata = {
-  title: 'Pricing — Interviewly',
+  title: 'Pricing — AI Interviewer',
   description: 'Simple plans for serious prep. Free during beta — paid plans launching soon.',
 };
 
@@ -25,13 +25,13 @@ const PLANS: Plan[] = [
     cadence: 'forever',
     tagline: 'Get a feel for real interview pressure.',
     features: [
-      '3 mock interviews / month',
+      '5 free mock interviews',
       'Technical & behavioral focus',
       'Resume + job-description tuning',
       'Graded report after each session',
     ],
     cta: 'Start free',
-    href: '/interview',
+    href: '/signup',
   },
   {
     name: 'Pro',
@@ -73,7 +73,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Do I need to install anything?',
-    a: 'No. Interviewly runs in your browser. For voice answers, just allow microphone access when prompted.',
+    a: 'No. AI Interviewer runs in your browser. For voice answers, just allow microphone access when prompted.',
   },
   {
     q: 'Which roles does it support?',

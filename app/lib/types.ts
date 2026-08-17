@@ -45,11 +45,6 @@ export interface TurnMessage {
   content: string;
 }
 
-export interface TurnResponse {
-  question: string;
-  done: boolean;
-}
-
 export interface ReportSection {
   score: number;
   notes: string;

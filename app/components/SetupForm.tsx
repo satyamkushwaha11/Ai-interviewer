@@ -2,7 +2,15 @@
 
 import { useState } from 'react';
 import Icon from './Icon';
+import { useToast } from './Toast';
+import { fetchJson, toUserMessage } from '@/app/lib/fetchJson';
 import type { Difficulty, Gender, InterviewConfig, InterviewFocus, InterviewMode } from '@/app/lib/types';
+import { LIMITS } from '@/app/lib/validate';
+
+type ResumeSource = 'upload' | 'paste';
+
+/** Below this the parse almost certainly failed (image-only PDF) or the paste is a fragment. */
+const MIN_RESUME_CHARS = 50;
 
 interface Props {
   onStart: (config: InterviewConfig) => void;
@@ -63,6 +71,10 @@ export default function SetupForm({ onStart }: Props) {
   const [fileName, setFileName] = useState('');
   const [dragging, setDragging] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(true);
+  const [resumeSource, setResumeSource] = useState<ResumeSource>('upload');
+  const { error: toastError, success: toastSuccess, warning: toastWarning } = useToast();
+
+  const resumeChars = resume.trim().length;
 
   async function handleResumeFile(file: File) {
     setParsing(true);
@@ -71,13 +83,27 @@ export default function SetupForm({ onStart }: Props) {
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const res = await fetch('/api/parse-resume', { method: 'POST', body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to read that file');
+      const data = await fetchJson<{ text: string; truncated?: boolean }>('/api/parse-resume', {
+        method: 'POST',
+        body: fd,
+      });
       setResume(data.text);
+      if (data.truncated) {
+        toastWarning(
+          `That document is very long — only the first ${LIMITS.resume.toLocaleString()} characters will be used.`,
+          { title: 'Resume trimmed' },
+        );
+      } else {
+        toastSuccess(`Read ${data.text.length.toLocaleString()} characters from ${file.name}.`, {
+          title: 'Resume uploaded',
+        });
+      }
     } catch (e) {
       setFileName('');
-      setError((e as Error).message);
+      setResume('');
+      const message = toUserMessage(e);
+      setError(message);
+      toastError(message, { title: 'Upload failed', key: 'resume-upload' });
     } finally {
       setParsing(false);
     }
@@ -90,13 +116,25 @@ export default function SetupForm({ onStart }: Props) {
     const file = e.dataTransfer.files?.[0];
     if (!file) return;
     if (!isSupportedResume(file)) {
-      setError('Only PDF and DOCX resumes are supported.');
+      const message = 'Only PDF and DOCX resumes are supported.';
+      setError(message);
+      toastError(message, { title: 'Unsupported file', key: 'resume-upload' });
       return;
     }
     handleResumeFile(file);
   }
 
-  const canStart = resume.trim().length > 50 && (mode === 'general' || jd.trim().length > 20);
+  const canStart = resumeChars >= MIN_RESUME_CHARS && (mode === 'general' || jd.trim().length >= 20);
+
+  function switchResumeSource(next: ResumeSource) {
+    if (next === resumeSource) return;
+    setResumeSource(next);
+    setError('');
+    // Each source owns its own text; switching starts clean so a stale upload
+    // cannot linger behind an empty paste box (or vice versa).
+    setResume('');
+    setFileName('');
+  }
 
   function start() {
     onStart({
@@ -161,14 +199,63 @@ export default function SetupForm({ onStart }: Props) {
         <section className="flex flex-col gap-2">
           <FieldLabel
             hint={
-              <span className="font-display text-label-sm text-on-surface-variant/60">
-                PDF or DOCX
-              </span>
+              <div
+                role="tablist"
+                aria-label="Resume source"
+                className="flex rounded-lg border border-white/10 bg-surface-container-low p-0.5"
+              >
+                {(
+                  [
+                    { value: 'upload', label: 'Upload file' },
+                    { value: 'paste', label: 'Paste text' },
+                  ] as { value: ResumeSource; label: string }[]
+                ).map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    role="tab"
+                    aria-selected={resumeSource === opt.value}
+                    onClick={() => switchResumeSource(opt.value)}
+                    className={`rounded-md px-3 py-1 font-display text-label-sm transition-colors ${
+                      resumeSource === opt.value
+                        ? 'bg-primary-fixed text-on-primary-fixed'
+                        : 'text-on-surface-variant hover:text-on-surface'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             }
           >
             Candidate profile
           </FieldLabel>
 
+          {resumeSource === 'paste' && (
+            <>
+              <textarea
+                className="field w-full resize-none p-4 text-body-md leading-relaxed"
+                rows={10}
+                maxLength={LIMITS.resume}
+                placeholder="Paste your resume text here — experience, projects, skills, education…"
+                value={resume}
+                onChange={(e) => setResume(e.target.value)}
+                aria-label="Resume text"
+              />
+              <div className="flex items-center justify-between font-display text-label-sm text-on-surface-variant/60">
+                <span>
+                  {resumeChars > 0 && resumeChars < MIN_RESUME_CHARS
+                    ? `Add at least ${MIN_RESUME_CHARS} characters so the interviewer has something to work with.`
+                    : 'Plain text is fine — formatting is ignored.'}
+                </span>
+                <span>
+                  {resumeChars.toLocaleString()} / {LIMITS.resume.toLocaleString()}
+                </span>
+              </div>
+            </>
+          )}
+
+          {resumeSource === 'upload' && (
           <div
             onDragEnter={(e) => {
               e.preventDefault();
@@ -225,16 +312,17 @@ export default function SetupForm({ onStart }: Props) {
             </div>
             <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary-fixed opacity-50 transition-all duration-700 ease-out group-hover:w-full" />
           </div>
+          )}
 
-          {resume.trim().length > 0 && resume.trim().length <= 50 && (
+          {resumeSource === 'upload' && resumeChars > 0 && resumeChars < MIN_RESUME_CHARS && (
             <p className="font-display text-label-sm text-error">
-              Only {resume.trim().length} characters were extracted — this file may be
-              image-based. Try a text-based PDF or DOCX export.
+              Only {resumeChars} characters were extracted — this file may be image-based. Try a
+              text-based PDF or DOCX export, or paste the text instead.
             </p>
           )}
 
           {/* Extracted text, so you can confirm the parse before starting */}
-          {resume.trim().length > 0 && (
+          {resumeSource === 'upload' && resumeChars > 0 && (
             <div className="animate-fade-in-up mt-1 overflow-hidden rounded-2xl border border-white/5 bg-surface-container-low">
               <button
                 type="button"
@@ -245,7 +333,7 @@ export default function SetupForm({ onStart }: Props) {
                   <Icon name="check-circle" className="h-4 w-4" />
                   Extracted text
                   <span className="text-on-surface-variant/60">
-                    · {resume.trim().length.toLocaleString()} characters
+                    · {resumeChars.toLocaleString()} characters
                   </span>
                 </span>
                 <span className="font-display text-label-sm text-on-surface-variant">
@@ -268,6 +356,7 @@ export default function SetupForm({ onStart }: Props) {
             <textarea
               className="field w-full resize-none p-4 text-body-md leading-relaxed"
               rows={6}
+              maxLength={LIMITS.jd}
               placeholder="Paste the full job description, requirements, and responsibilities here. The interviewer analyses key skills and generates targeted technical and behavioural questions…"
               value={jd}
               onChange={(e) => setJd(e.target.value)}
@@ -290,6 +379,7 @@ export default function SetupForm({ onStart }: Props) {
             <input
               className="field w-full px-4 py-3 text-body-md"
               placeholder="e.g. Senior Software Engineer"
+              maxLength={LIMITS.role}
               value={role}
               onChange={(e) => setRole(e.target.value)}
             />

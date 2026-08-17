@@ -7,6 +7,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
       { label: 'Features', href: '/features' },
       { label: 'Pricing', href: '/pricing' },
       { label: 'Start a mock interview', href: '/interview' },
+      { label: 'Past reports', href: '/history' },
     ],
   },
   {
@@ -33,7 +34,7 @@ export default function SiteFooter() {
         <div className="col-span-2 md:col-span-1">
           <div className="mb-4 flex items-center gap-2.5">
             <span className="font-display text-headline-md font-bold tracking-tight text-primary-fixed">
-              Interviewly
+              AI Interviewer
             </span>
           </div>
           <p className="max-w-xs text-body-md leading-relaxed text-on-surface-variant/70">
@@ -65,7 +66,7 @@ export default function SiteFooter() {
 
       <div className="border-t border-white/5">
         <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-3 px-5 py-6 font-display text-label-sm text-on-surface-variant/60 sm:flex-row md:px-16">
-          <span>© {2026} Interviewly. All rights reserved.</span>
+          <span>© {2026} AI Interviewer. All rights reserved.</span>
           <span>Built for candidates who want the real thing.</span>
         </div>
       </div>

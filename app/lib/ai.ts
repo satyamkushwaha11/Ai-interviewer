@@ -22,11 +22,20 @@ export interface ChatMessage {
   content: string;
 }
 
+export type ReasoningEffort = 'none' | 'low' | 'medium' | 'high';
+
 export interface ChatOptions {
   temperature?: number;
   maxTokens?: number;
   /** Ask the model to return a single JSON object. */
   json?: boolean;
+  /**
+   * How much a reasoning model (GPT-5 family, o-series) may think before
+   * answering. Ignored by non-reasoning models. Defaults to 'none' — a live
+   * interviewer needs the next question in seconds, not a chain of thought.
+   * Grading can afford 'low'.
+   */
+  reasoningEffort?: ReasoningEffort;
 }
 
 export interface AIProvider {
@@ -60,17 +69,51 @@ export function resolveProviderName(): ProviderName | null {
 
 // --- OpenAI implementation ---------------------------------------------------
 
+/**
+ * GPT-5-family and o-series models on Chat Completions: reject `max_tokens`
+ * (want `max_completion_tokens`), only accept the default temperature, and
+ * spend part of the completion budget on hidden reasoning tokens unless
+ * `reasoning_effort` is dialled down. Matches "gpt-5.6-sol", "openai/gpt-5.4",
+ * "o3", … but not the "-chat" variants, which behave like classic chat models.
+ */
+export function isReasoningModel(model: string): boolean {
+  return /(^|\/)(gpt-5|o\d)/.test(model) && !/-chat/.test(model);
+}
+
+/** The first GPT-5 release (2025-08) called the lowest effort "minimal"; 5.1+ call it "none". */
+function lowestEffort(model: string): 'none' | 'minimal' {
+  return /(^|\/)gpt-5(-mini|-nano)?(-\d{4}-\d{2}-\d{2})?$/.test(model) ? 'minimal' : 'none';
+}
+
+/** Room for hidden reasoning tokens so the visible answer is not truncated. */
+const REASONING_HEADROOM: Record<ReasoningEffort, number> = {
+  none: 0,
+  low: 2048,
+  medium: 8192,
+  high: 16384,
+};
+
 const openAIProvider: AIProvider = {
   name: 'openai',
   async chat(messages, opts) {
     const openai = getOpenAI();
     if (!openai) throw new Error('OpenAI selected but OPENAI_API_KEY is missing');
 
+    const reasoning = isReasoningModel(CHAT_MODEL);
+    const effort: ReasoningEffort = opts?.reasoningEffort ?? 'none';
+
     const completion = await openai.chat.completions.create({
       model: CHAT_MODEL,
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
-      temperature: opts?.temperature,
-      max_tokens: opts?.maxTokens,
+      // Reasoning models only accept the default temperature.
+      ...(!reasoning && opts?.temperature != null ? { temperature: opts.temperature } : {}),
+      // `max_tokens` is deprecated everywhere and rejected by reasoning models.
+      ...(opts?.maxTokens != null
+        ? { max_completion_tokens: opts.maxTokens + (reasoning ? REASONING_HEADROOM[effort] : 0) }
+        : {}),
+      ...(reasoning
+        ? { reasoning_effort: effort === 'none' ? lowestEffort(CHAT_MODEL) : effort }
+        : {}),
       ...(opts?.json ? { response_format: { type: 'json_object' as const } } : {}),
     });
 

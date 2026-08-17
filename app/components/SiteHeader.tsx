@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useCurrentUser } from '@/app/lib/useCurrentUser';
 import Icon from './Icon';
 
 const NAV = [
@@ -14,6 +15,15 @@ const NAV = [
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, loading, signOut } = useCurrentUser();
+
+  const handleSignOut = async () => {
+    setOpen(false);
+    await signOut();
+    router.refresh();
+    if (pathname === '/interview' || pathname.startsWith('/history')) router.push('/');
+  };
 
   return (
     <header className="sticky top-0 z-50 h-16 border-b border-white/10 bg-surface/70 shadow-sm backdrop-blur-xl">
@@ -21,7 +31,7 @@ export default function SiteHeader() {
         {/* Brand */}
         <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
           <span className="font-display text-headline-md font-bold tracking-tight text-primary-fixed">
-            Interviewly
+            AI Interviewer
           </span>
         </Link>
 
@@ -40,20 +50,52 @@ export default function SiteHeader() {
           ))}
         </nav>
 
-        {/* Actions */}
-        <div className="hidden items-center gap-4 md:flex">
-          <Link
-            href="/interview"
-            className="rounded-md px-3 py-2 font-display text-label-md text-on-surface-variant transition-colors hover:bg-white/5 hover:text-on-surface"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/interview"
-            className="rounded-lg bg-primary-fixed px-4 py-2 font-display text-label-md font-medium text-on-primary-fixed transition-all hover:brightness-110"
-          >
-            Start free
-          </Link>
+        {/* Actions — keep the slot width stable while /api/auth/me resolves */}
+        <div className="hidden items-center gap-4 md:flex" aria-busy={loading}>
+          {user ? (
+            <>
+              <span
+                className="max-w-[12rem] truncate font-display text-label-md text-on-surface-variant"
+                title={user.email}
+              >
+                {user.name || user.email}
+              </span>
+              <Link
+                href="/history"
+                className="rounded-md px-3 py-2 font-display text-label-md text-on-surface-variant transition-colors hover:bg-white/5 hover:text-on-surface"
+              >
+                History
+              </Link>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="rounded-md px-3 py-2 font-display text-label-md text-on-surface-variant transition-colors hover:bg-white/5 hover:text-on-surface"
+              >
+                Sign out
+              </button>
+              <Link
+                href="/interview"
+                className="rounded-lg bg-primary-fixed px-4 py-2 font-display text-label-md font-medium text-on-primary-fixed transition-all hover:brightness-110"
+              >
+                Start interview
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className={`rounded-md px-3 py-2 font-display text-label-md text-on-surface-variant transition-colors hover:bg-white/5 hover:text-on-surface ${loading ? 'invisible' : ''}`}
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-lg bg-primary-fixed px-4 py-2 font-display text-label-md font-medium text-on-primary-fixed transition-all hover:brightness-110"
+              >
+                Start free
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -80,13 +122,51 @@ export default function SiteHeader() {
               {n.label}
             </Link>
           ))}
-          <Link
-            href="/interview"
-            className="mt-2 block w-full rounded-lg bg-primary-fixed px-4 py-2.5 text-center font-display text-label-md font-medium text-on-primary-fixed"
-            onClick={() => setOpen(false)}
-          >
-            Start free
-          </Link>
+          {user ? (
+            <>
+              <div className="truncate pt-1 font-display text-label-sm text-on-surface-variant" title={user.email}>
+                {user.name || user.email}
+              </div>
+              <Link
+                href="/history"
+                className="block py-1 font-display text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
+                onClick={() => setOpen(false)}
+              >
+                History
+              </Link>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="block py-1 font-display text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
+              >
+                Sign out
+              </button>
+              <Link
+                href="/interview"
+                className="mt-2 block w-full rounded-lg bg-primary-fixed px-4 py-2.5 text-center font-display text-label-md font-medium text-on-primary-fixed"
+                onClick={() => setOpen(false)}
+              >
+                Start interview
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="block py-1 font-display text-label-md text-on-surface-variant transition-colors hover:text-on-surface"
+                onClick={() => setOpen(false)}
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="mt-2 block w-full rounded-lg bg-primary-fixed px-4 py-2.5 text-center font-display text-label-md font-medium text-on-primary-fixed"
+                onClick={() => setOpen(false)}
+              >
+                Start free
+              </Link>
+            </>
+          )}
         </div>
       )}
     </header>

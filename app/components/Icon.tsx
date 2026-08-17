@@ -10,7 +10,6 @@ export type IconName =
   | 'mic'
   | 'stop'
   | 'keyboard'
-  | 'phone-off'
   | 'call-end'
   | 'close'
   | 'check'
@@ -46,12 +45,6 @@ const PATHS: Record<IconName, React.ReactNode> = {
     <>
       <rect x="2" y="6" width="20" height="12" rx="2" />
       <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9 14h6" />
-    </>
-  ),
-  'phone-off': (
-    <>
-      <path d="M15.5 21A13.5 13.5 0 0 1 3 8.5 2 2 0 0 1 5 6.5h2.2a1.5 1.5 0 0 1 1.5 1.3c.1.9.3 1.7.6 2.5a1.5 1.5 0 0 1-.4 1.6L7.8 13a12 12 0 0 0 3.2 3.2l1.1-1.1a1.5 1.5 0 0 1 1.6-.4c.8.3 1.6.5 2.5.6a1.5 1.5 0 0 1 1.3 1.5V19a2 2 0 0 1-2 2z" />
-      <path d="M3 3l18 18" />
     </>
   ),
   // Filled (see FILLED set) — the outline version reads as a muddle at 20px.
